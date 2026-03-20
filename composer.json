@@ -50,6 +50,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "@format:check",
             "@php artisan test"
         ],
         "post-autoload-dump": [
@@ -71,10 +72,15 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "analyse": "vendor/bin/phpstan analyse --memory-limit=2G",
-        "format": "vendor/bin/pint",
+        "format": "vendor/bin/pint --parallel",
+        "format:check": "vendor/bin/pint --parallel --test",
         "test-cover": [
             "@php artisan config:clear --ansi",
             "@php artisan test --coverage"
+        ],
+        "ci:check": [
+            "Composer\\Config::disableProcessTimeout",
+            "@test"
         ]
     },
     "extra": {
