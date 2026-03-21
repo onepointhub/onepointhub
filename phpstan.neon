@@ -3,6 +3,8 @@ includes:
   - vendor/nesbot/carbon/extension.neon
 
 parameters:
-  level: 10
+  level: 9
   paths:
     - app/
+  ignoreErrors:
+    - '#is used zero times#'

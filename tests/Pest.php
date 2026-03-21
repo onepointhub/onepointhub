@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\User;
+use App\Models\Workspace;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /*
@@ -14,7 +18,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -43,7 +47,37 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create a workspace and user with the given role, bind both to the container.
+ * Returns [$user, $workspace].
+ *
+ * @return array{0: User, 1: Workspace}
+ */
+function workspaceWithUser(string $role = 'member'): array
 {
-    // ..
+    $workspace = Workspace::factory()->create();
+    $user = User::factory()->create();
+    $user->workspaces()->attach($workspace->id, ['role' => $role]);
+    app()->instance(Workspace::class, $workspace);
+    session(['active_workspace_id' => $workspace->id]);
+
+    if (class_exists(Role::class)) {
+        setPermissionsTeamId($workspace->id);
+        $user->assignRole($role);
+    }
+
+    return [$user, $workspace];
+}
+
+/**
+ * Authenticate as a workspace member with the given role.
+ * Binds workspace and user to the container and session.
+ */
+function actingAsWorkspaceMember(string $role = 'member'): User
+{
+    [$user] = workspaceWithUser($role);
+
+    test()->actingAs($user);
+
+    return $user;
 }

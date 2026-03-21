@@ -64,7 +64,7 @@
 
 ### Milestone v0.1 — Foundation
 
-- [ ] #1 — Initialise Laravel project with sane defaults
+- [x] #1 — Initialise Laravel project with sane defaults
 
 **Labels:** `type: chore` `module: core` `priority: high` `effort: small`
 
@@ -82,7 +82,7 @@ Set up a fresh Laravel 13 project with the following configuration locked in fro
 
 ---
 
-- [ ] #2 — Configure multi-database support (MySQL + SQLite)
+- [x] #2 — Configure multi-database support (MySQL + SQLite)
 
 **Labels:** `type: chore` `module: core` `priority: high` `effort: small`
 
@@ -98,7 +98,7 @@ The app must run on SQLite for local dev/testing with zero external dependencies
 
 ---
 
-- [ ] #3 — Implement a workspace (tenant) model and scoping
+- [x] #3 — Implement a workspace (tenant) model and scoping
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: large`
 
