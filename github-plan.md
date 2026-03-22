@@ -116,7 +116,7 @@ Every resource in the system belongs to a `Workspace`. Implement workspace-level
 
 ---
 
-- [ ] #4 — Authentication: registration, login, logout
+- [x] #4 — Authentication: registration, login, logout
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
