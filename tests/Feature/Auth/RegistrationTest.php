@@ -15,7 +15,7 @@ it('registers a new user and redirects to onboarding', function () {
     ]);
 
     $response->assertSessionHasNoErrors()
-        ->assertRedirect('/');
+        ->assertRedirect(route('dashboard', absolute: false));
 
     $this->assertAuthenticated();
 

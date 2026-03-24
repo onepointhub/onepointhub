@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - '**.php'
-      - 'phpstan.neon'
-      - '.github/workflows/phpstan.yml'
+      - phpstan.neon
+      - .github/workflows/phpstan.yml
 
 permissions:
   contents: read
@@ -29,4 +29,3 @@ jobs:
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
-

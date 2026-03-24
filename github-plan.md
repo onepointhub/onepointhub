@@ -64,7 +64,7 @@
 
 ### Milestone v0.1 — Foundation
 
-- [x] #1 — Initialise Laravel project with sane defaults
+- [x] # 1 — Initialise Laravel project with sane defaults
 
 **Labels:** `type: chore` `module: core` `priority: high` `effort: small`
 
@@ -82,7 +82,7 @@ Set up a fresh Laravel 13 project with the following configuration locked in fro
 
 ---
 
-- [x] #2 — Configure multi-database support (MySQL + SQLite)
+- [x] # 2 — Configure multi-database support (MySQL + SQLite)
 
 **Labels:** `type: chore` `module: core` `priority: high` `effort: small`
 
@@ -98,7 +98,7 @@ The app must run on SQLite for local dev/testing with zero external dependencies
 
 ---
 
-- [x] #3 — Implement a workspace (tenant) model and scoping
+- [x] # 3 — Implement a workspace (tenant) model and scoping
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: large`
 
@@ -116,7 +116,7 @@ Every resource in the system belongs to a `Workspace`. Implement workspace-level
 
 ---
 
-- [x] #4 — Authentication: registration, login, logout
+- [x] # 4 — Authentication: registration, login, logout
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
@@ -135,7 +135,7 @@ Use Laravel Fortify as a scaffolding base, then strip it down to only what's nee
 
 ---
 
-- [ ] #5 — User profile and account settings
+- [ ] # 5 — User profile and account settings
 
 **Labels:** `type: feature` `module: core` `priority: medium` `effort: small`
 
@@ -150,7 +150,7 @@ Use Laravel Fortify as a scaffolding base, then strip it down to only what's nee
 
 ---
 
-- [ ] #6 — Workspace creation and onboarding flow
+- [ ] # 6 — Workspace creation and onboarding flow
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
@@ -170,7 +170,7 @@ After registration, new users are guided through a minimal onboarding:
 
 ---
 
-- [ ] #7 — Role & permission system
+- [ ] # 7 — Role & permission system
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: large`
 
@@ -192,7 +192,7 @@ Built-in roles:
 
 ---
 
-- [ ] #8 — Workspace member management
+- [ ] # 8 — Workspace member management
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
@@ -208,7 +208,7 @@ Built-in roles:
 
 ---
 
-- [ ] #9 — Global notification system
+- [ ] # 9 — Global notification system
 
 **Labels:** `type: feature` `module: core` `priority: medium` `effort: large`
 
@@ -224,7 +224,7 @@ Built-in roles:
 
 ---
 
-- [ ] #10 — Activity / audit log
+- [ ] # 10 — Activity / audit log
 
 **Labels:** `type: feature` `module: core` `priority: medium` `effort: medium`
 
@@ -239,7 +239,7 @@ Built-in roles:
 
 ---
 
-- [ ] #11 — Application layout and navigation shell
+- [ ] # 11 — Application layout and navigation shell
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
@@ -255,7 +255,7 @@ Built-in roles:
 
 ---
 
-- [ ] #12 — Dashboard / home page
+- [ ] # 12 — Dashboard / home page
 
 **Labels:** `type: feature` `module: core` `priority: medium` `effort: medium`
 

@@ -15,10 +15,6 @@ class Workspace extends Model
     /** @use HasFactory<WorkspaceFactory> */
     use HasFactory;
 
-    protected $keyType = 'string';
-
-    public $incrementing = false;
-
     /**
      * Get the attributes that should be cast.
      *
@@ -36,10 +32,6 @@ class Workspace extends Model
         parent::boot();
 
         static::creating(function (Workspace $workspace) {
-            if (empty($workspace->id)) {
-                $workspace->id = (string) Str::ulid();
-            }
-
             if (empty($workspace->slug)) {
                 $workspace->slug = self::generateUniqueSlug($workspace->name);
             }

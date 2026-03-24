@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use App\Models\Workspace;
+use Laravel\Fortify\Features;
 
 it('renders the login page', function () {
     $this->get(route('login'))->assertOk();
@@ -9,8 +9,6 @@ it('renders the login page', function () {
 
 it('logs in with valid credentials', function () {
     $user = User::factory()->create();
-    $workspace = Workspace::factory()->create();
-    $user->workspaces()->attach($workspace->id, ['role' => 'owner']);
 
     $response = $this->post(route('login.store'), [
         'email' => $user->email,
@@ -19,7 +17,7 @@ it('logs in with valid credentials', function () {
 
     $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect('/');
+        ->assertRedirect(route('dashboard', absolute: false));
 
     $this->assertAuthenticatedAs($user);
 });
@@ -37,22 +35,43 @@ it('rejects invalid credentials', function () {
 
 it('logs out and invalidates session', function () {
     $user = User::factory()->create();
-    $this->actingAs($user)->post(route('logout'))->assertRedirect('/');
+    $this->actingAs($user)->post(route('logout'))->assertRedirect(route('home'));
     $this->assertGuest();
 });
 
 it('rate limits login to 10 attempts per minute', function () {
-    User::factory()->create(['email' => 'user@example.com']);
+    $user = User::factory()->create();
 
-    for ($i = 0; $i < 10; $i++) {
-        $this->post(route('login.store'), [
-            'email' => 'user@example.com',
-            'password' => 'wrong',
-        ]);
-    }
+    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
 
-    $this->post(route('login.store'), [
-        'email' => 'user@example.com',
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
         'password' => 'wrong',
-    ])->assertStatus(429);
+    ]);
+
+    $response->assertTooManyRequests();
+});
+
+it('redirects to two factor challenge when two factor enabled', function () {
+    Features::twoFactorAuthentication([
+        'confirm' => true,
+        'confirmPassword' => true,
+    ]);
+
+    $user = User::factory()->create();
+
+    $user->forceFill([
+        'two_factor_secret' => encrypt('test-secret'),
+        'two_factor_recovery_codes' => encrypt(json_encode(['code1', 'code2'])),
+        'two_factor_confirmed_at' => now(),
+    ])->save();
+
+    $response = $this->post(route('login'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $response->assertRedirect(route('two-factor.login'));
+    $response->assertSessionHas('login.id', $user->id);
+    $this->assertGuest();
 });

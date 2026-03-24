@@ -6,13 +6,16 @@ end_of_line = lf
 indent_size = 4
 indent_style = space
 insert_final_newline = true
+max_line_length = 120
+tab_width = 4
 trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
 
-[*.{yml,yaml}]
+[*.vue]
 indent_size = 2
+tab_width = 2
 
-[compose.yaml]
-indent_size = 4
+[{*.json,*.ts,eslint.config.mjs}]
+indent_size = 2

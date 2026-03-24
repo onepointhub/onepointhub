@@ -1,50 +1,16 @@
 <?php
 
-use App\Livewire\Auth\ConfirmPassword;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\Register;
-use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Auth\VerifyEmail;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\ProfilePhotoController;
+use App\Http\Controllers\Settings\SecurityController;
 use Illuminate\Support\Facades\Route;
 
-// ---------------------------------------------------------------------------
-// Guest routes
-// ---------------------------------------------------------------------------
-// Route::middleware('guest')->group(function () {
-//    Route::get('/login', Login::class)->name('login');
-//    Route::get('/register', Register::class)->name('register');
-//    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-//    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
-// });
-
+Route::get('/', fn () => 'Home page')->name('home');
 // ---------------------------------------------------------------------------
 // Authenticated routes
 // ---------------------------------------------------------------------------
-Route::middleware('auth')->group(function () {
-    //    // Email verification
-    //    Route::get('/email/verify', VerifyEmail::class)->name('verification.notice');
-    //
-    //    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    //        $request->fulfill();
-    //
-    //        return redirect()->route('onboarding.workspace.create');
-    //    })->middleware('signed')->name('verification.verify');
-    //
-    //    // Password confirmation
-    //    Route::get('/user/confirm-password', ConfirmPassword::class)->name('password.confirm');
-    //
-    //    // Logout
-    //    Route::post('/logout', function (Request $request) {
-    //        Auth::logout();
-    //        $request->session()->invalidate();
-    //        $request->session()->regenerateToken();
-    //
-    //        return redirect('/');
-    //    })->name('logout');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 
     // Onboarding stub
     Route::get('/onboarding/workspace', fn () => 'Onboarding coming soon')
@@ -52,6 +18,22 @@ Route::middleware('auth')->group(function () {
 });
 
 // ---------------------------------------------------------------------------
-// Root redirect
+// Profile routes
 // ---------------------------------------------------------------------------
-Route::redirect('/', '/dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('settings', '/settings/profile');
+
+    Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('settings/profile-photo', [ProfilePhotoController::class, 'destroy'])->name('profile.photo.destroy');
+
+    Route::get('settings/security', [SecurityController::class, 'edit'])->name('security.edit');
+
+    Route::put('settings/password', [SecurityController::class, 'update'])
+        ->middleware('throttle:6,1')
+        ->name('user-password.update');
+});

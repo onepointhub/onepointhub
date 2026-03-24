@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Models\Workspace;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('workspaces', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('plan')->default('self_hosted');
@@ -23,14 +25,12 @@ return new class extends Migration
 
         // The pivot that joins users to workspaces
         Schema::create('workspace_user', function (Blueprint $table) {
-            $table->ulid('user_id');
-            $table->ulid('workspace_id');
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Workspace::class)->constrained()->cascadeOnDelete();
             $table->string('role')->default('member'); // owner, admin, member, client
             $table->timestamps();
 
             $table->primary(['user_id', 'workspace_id']);
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('workspace_id')->references('id')->on('workspaces')->cascadeOnDelete();
         });
     }
 
