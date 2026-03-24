@@ -135,7 +135,7 @@ Use Laravel Fortify as a scaffolding base, then strip it down to only what's nee
 
 ---
 
-- [ ] # 5 — User profile and account settings
+- [x] # 5 — User profile and account settings
 
 **Labels:** `type: feature` `module: core` `priority: medium` `effort: small`
 
@@ -150,7 +150,7 @@ Use Laravel Fortify as a scaffolding base, then strip it down to only what's nee
 
 ---
 
-- [ ] # 6 — Workspace creation and onboarding flow
+- [x] # 6 — Workspace creation and onboarding flow
 
 **Labels:** `type: feature` `module: core` `priority: high` `effort: medium`
 
