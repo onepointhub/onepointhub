@@ -12,13 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['name', 'email', 'password', 'timezone'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasProfilePhoto, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * Get the attributes that should be cast.
@@ -40,12 +41,13 @@ class User extends Authenticatable
     protected $appends = ['avatar'];
 
     /**
-     * @return BelongsToMany<Workspace, $this>
+     * @return BelongsToMany<Workspace, $this, WorkspaceUser>
      */
     public function workspaces(): BelongsToMany
     {
         return $this->belongsToMany(Workspace::class, 'workspace_user', 'user_id', 'workspace_id')
-            ->withPivot('role')
+            ->using(WorkspaceUser::class)
+            ->withPivot(['role'])
             ->withTimestamps();
     }
 }

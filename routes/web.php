@@ -11,7 +11,7 @@ Route::get('/', fn () => 'Home page')->name('home');
 // ---------------------------------------------------------------------------
 // Authenticated routes
 // ---------------------------------------------------------------------------
-Route::middleware(['auth', 'verified', 'workspace'])->group(function () {
+Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 

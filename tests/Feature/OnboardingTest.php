@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Workspace;
+use Database\Seeders\PermissionSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('redirects authenticated users with no workspace to step 1', function () {
@@ -37,6 +38,8 @@ it('creates workspace and assigns owner role to user', function () {
 });
 
 it('renders step 2 — invite team (skippable)', function () {
+    $this->seed(PermissionSeeder::class);
+
     [$user] = workspaceWithUser('owner');
 
     $this->actingAs($user)
@@ -47,6 +50,8 @@ it('renders step 2 — invite team (skippable)', function () {
 });
 
 it('can skip step 2 invite', function () {
+    $this->seed(PermissionSeeder::class);
+
     [$user] = workspaceWithUser('owner');
 
     $this->actingAs($user)
@@ -55,6 +60,8 @@ it('can skip step 2 invite', function () {
 });
 
 it('renders step 3 — choose currency', function () {
+    $this->seed(PermissionSeeder::class);
+
     [$user] = workspaceWithUser('owner');
 
     $this->actingAs($user)
@@ -65,6 +72,8 @@ it('renders step 3 — choose currency', function () {
 });
 
 it('saves currency and redirects to dashboard', function () {
+    $this->seed(PermissionSeeder::class);
+
     [$user, $workspace] = workspaceWithUser('owner');
 
     $this->actingAs($user)

@@ -14,7 +14,8 @@
     "laravel/fortify": "^1.36",
     "laravel/framework": "^13.0",
     "laravel/tinker": "^3.0",
-    "laravel/wayfinder": "*"
+    "laravel/wayfinder": "*",
+    "spatie/laravel-permission": "^7.2"
   },
   "require-dev": {
     "fakerphp/faker": "^1.24",
