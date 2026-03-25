@@ -4,6 +4,8 @@ use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\WorkspaceSettings\InvitationController;
+use App\Http\Controllers\WorkspaceSettings\MemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => 'Home page')->name('home');
@@ -53,3 +55,19 @@ Route::middleware(['auth', 'verified'])
             Route::post('currency', [OnboardingController::class, 'storeCurrency'])->name('currency.store');
         });
     });
+
+// ---------------------------------------------------------------------------
+// Workspace Settings routes
+// ---------------------------------------------------------------------------
+Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function () {
+    Route::prefix('workspace/settings')
+        ->name('workspace.')
+        ->group(function () {
+            Route::get('members', [MemberController::class, 'index'])->name('members.index');
+            Route::patch('members/{user}', [MemberController::class, 'update'])->name('members.update');
+            Route::delete('members/{user}', [MemberController::class, 'destroy'])->name('members.destroy');
+            Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+        });
+});
+
+Route::middleware('auth')->get('/invitations/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');

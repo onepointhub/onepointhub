@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\WorkspaceRole;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\StoreWorkspaceRequest;
 use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceInvitation;
+use App\Notifications\WorkspaceInvitationNotification;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,9 +42,25 @@ class OnboardingController extends Controller
         return Inertia::render('onboarding/Invite');
     }
 
-    public function storeInvite(): RedirectResponse
+    public function storeInvite(Request $request): RedirectResponse
     {
-        // Invitation emails handled in Task #8 - skip for now
+        $email = $request->input('emails');
+
+        if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $workspace = app(Workspace::class);
+
+            $invitation = WorkspaceInvitation::create([
+                'workspace_id' => $workspace->id,
+                'email' => $email,
+                'role' => WorkspaceRole::Member->value,
+                'token' => Str::random(64),
+                'expires_at' => now()->addHours(48),
+            ]);
+
+            Notification::route('mail', $invitation->email)
+                ->notify(new WorkspaceInvitationNotification($invitation));
+        }
+
         return redirect()->route('onboarding.currency');
     }
 

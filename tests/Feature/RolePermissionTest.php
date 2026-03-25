@@ -2,11 +2,6 @@
 
 use App\Models\User;
 use App\Models\Workspace;
-use Database\Seeders\PermissionSeeder;
-
-beforeEach(function () {
-    $this->seed(PermissionSeeder::class);
-});
 
 it('owner has all permissions', function () {
     $workspace = Workspace::factory()->create();
