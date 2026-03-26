@@ -140,3 +140,26 @@ it('denies activity log access to workspace members', function () {
         ->get(route('workspace.activity-log.index'))
         ->assertForbidden();
 });
+
+it('does not include hidden attributes in update activity log properties', function () {
+    [$user, $workspace] = workspaceWithUser('owner');
+    app()->instance(Workspace::class, $workspace);
+    $this->actingAs($user);
+
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $workspace->id,
+        'email' => 'hidden@example.com',
+        'role' => 'member',
+        'token' => Str::random(64),
+        'expires_at' => now()->addHours(48),
+    ]);
+
+    $invitation->update(['accepted_at' => now()]);
+
+    $log = ActivityLog::where('workspace_id', $workspace->id)
+        ->where('event', 'updated')
+        ->where('subject_type', WorkspaceInvitation::class)
+        ->first();
+
+    expect($log->properties['old'])->not->toHaveKey('token');
+});

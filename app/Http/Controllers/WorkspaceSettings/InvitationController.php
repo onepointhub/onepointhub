@@ -12,8 +12,10 @@ use App\Notifications\MemberJoinedNotification;
 use App\Notifications\WorkspaceInvitationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use Throwable;
 
 class InvitationController extends Controller
 {
@@ -21,12 +23,15 @@ class InvitationController extends Controller
     {
         $workspace = app(Workspace::class);
 
+        /** @var int $expiry */
+        $expiry = config('workspace.invitation_expiry_hours');
+
         $invitation = WorkspaceInvitation::create([
             'workspace_id' => $workspace->id,
             'email' => $request->validated('email'),
             'role' => $request->validated('role'),
             'token' => Str::random(64),
-            'expires_at' => now()->addHours(48),
+            'expires_at' => now()->addHours($expiry),
         ]);
 
         Notification::route('mail', $invitation->email)
@@ -36,9 +41,16 @@ class InvitationController extends Controller
             ->with('status', 'Invitation sent.');
     }
 
+    /**
+     * @throws Throwable
+     */
     public function accept(Request $request, string $token): RedirectResponse
     {
         $invitation = WorkspaceInvitation::where('token', $token)->firstOrFail();
+
+        if ($invitation->accepted_at !== null) {
+            return redirect()->route('dashboard');
+        }
 
         if ($invitation->isExpired()) {
             abort(403, 'This invitation has expired.');
@@ -55,9 +67,11 @@ class InvitationController extends Controller
         $workspace = $invitation->workspace;
 
         if (! $user->workspaces()->where('workspaces.id', $invitation->workspace_id)->exists()) {
-            setPermissionsTeamId($invitation->workspace_id);
-            $user->workspaces()->attach($invitation->workspace_id, ['role' => $invitation->role]);
-            $user->assignRole($invitation->role);
+            DB::transaction(function () use ($invitation, $user): void {
+                setPermissionsTeamId($invitation->workspace_id);
+                $user->workspaces()->attach($invitation->workspace_id, ['role' => $invitation->role]);
+                $user->assignRole($invitation->role);
+            });
 
             // Notify all owners and admins (excluding the new member)
             $notifiables = $workspace->members()

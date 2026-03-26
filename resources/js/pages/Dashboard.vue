@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getInitials } from '@/composables/useInitials'
+import { timeAgo } from '@/composables/useTimeAgo'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { dashboard } from '@/routes'
 
@@ -47,20 +48,6 @@ function eventVariant(event: string): 'default' | 'secondary' | 'destructive' {
     return 'destructive'
   }
   return 'secondary'
-}
-
-function timeAgo(isoString: string): string {
-  const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000)
-  if (diff < 60) {
-    return `${diff}s ago`
-  }
-  if (diff < 3600) {
-    return `${Math.floor(diff / 60)}m ago`
-  }
-  if (diff < 86400) {
-    return `${Math.floor(diff / 3600)}h ago`
-  }
-  return new Date(isoString).toLocaleDateString()
 }
 </script>
 

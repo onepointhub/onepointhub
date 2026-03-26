@@ -1,58 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OnePointHub
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A multi-tenant workspace SaaS platform built with Laravel 13, Inertia.js v2, and Vue 3.
 
-## About Laravel
+## Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.3+
+- Node.js 20+
+- Composer 2
+- SQLite (default) or MySQL/PostgreSQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Getting Started
 
 ```bash
-composer require laravel/boost --dev
+# Clone and install
+git clone https://github.com/onepointhub/onepointhub.git
+cd onepointhub
 
-php artisan boost:install
+# Install dependencies, copy .env, generate key, migrate, and build assets
+composer run setup
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Then start the development server (Laravel, queue worker, Pail log viewer, and Vite run concurrently):
 
-## Contributing
+```bash
+composer run dev
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The application will be available at `http://localhost:8000`.
 
-## Code of Conduct
+## Tech Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Layer       | Technology                              |
+|-------------|-----------------------------------------|
+| Backend     | Laravel 13, PHP 8.3                     |
+| Frontend    | Vue 3, TypeScript, Inertia.js v2        |
+| Styling     | Tailwind CSS v4, shadcn-vue (Reka UI)   |
+| Auth        | Laravel Fortify (email/password, 2FA)   |
+| Permissions | Spatie Laravel Permission (team-scoped) |
+| Routes (TS) | Laravel Wayfinder                       |
+| Testing     | Pest 4                                  |
+| Queue       | Database driver                         |
 
-## Security Vulnerabilities
+## Features (v0.1)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Workspaces** — create and switch between workspaces; session-scoped multi-tenancy with automatic query isolation
+- **Onboarding** — three-step flow: name a workspace, invite a colleague, choose currency
+- **Roles** — Owner · Admin · Member · Client, with Spatie team scoping
+- **Members** — invite by email (token-based, 48h expiry), manage roles inline, remove members
+- **Notifications** — in-app bell with unread count, mark-read actions, per-type email opt-out
+- **Activity log** — immutable audit trail of created/updated/deleted events on workspace models
+- **Dashboard** — member count, pending invitations, recent members, recent activity feed
+- **Auth** — registration, login, email verification, password reset, 2FA (TOTP), profile photo
 
-## License
+## Running Tests
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan test
+```
+
+## Code Quality
+
+```bash
+# Format PHP
+vendor/bin/pint
+
+# Static analysis
+composer run analyse
+
+# TypeScript type check
+npm run types:check
+
+# Full CI check (lint + types + static analysis + tests)
+composer run ci:check
+```
+
+## Configuration
+
+Key environment variables (see `.env.example` for the full list):
+
+| Variable                  | Default                 | Description                                        |
+|---------------------------|-------------------------|----------------------------------------------------|
+| `APP_URL`                 | `http://localhost:8000` | Application URL                                    |
+| `DB_CONNECTION`           | `sqlite`                | Database driver                                    |
+| `QUEUE_CONNECTION`        | `database`              | Queue driver                                       |
+| `MAIL_MAILER`             | `log`                   | Mail driver (`log` in local, `smtp` in production) |
+| `INVITATION_EXPIRY_HOURS` | `48`                    | Hours before a workspace invitation expires        |
+
+## Project Structure
+
+```
+app/
+  Enums/              WorkspaceRole, NotificationType
+  Http/
+    Controllers/      DashboardController, OnboardingController, workspace settings…
+    Middleware/        WorkspaceMiddleware, EnsureInternalAccess
+    Requests/         FormRequests per controller action
+  Models/
+    Concerns/         BelongsToWorkspace, HasProfilePhoto, LogsActivity
+    Scopes/           WorkspaceScope (automatic multi-tenant filtering)
+  Notifications/      MemberJoinedNotification, WorkspaceInvitationNotification
+  Providers/          AuthServiceProvider (Gate definitions)
+resources/js/
+  components/         NotificationBell, WorkspaceSwitcher, shadcn-vue ui/
+  composables/        useInitials, useTimeAgo, useTwoFactorAuth
+  layouts/            AppLayout, workspace/settings/Layout
+  pages/              Dashboard, onboarding/*, settings/*, workspace/settings/*
+  routes/             Wayfinder-generated TypeScript route helpers
+```
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).

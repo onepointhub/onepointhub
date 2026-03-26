@@ -4,6 +4,8 @@ namespace App\Http\Requests\WorkspaceSettings;
 
 use App\Enums\WorkspaceRole;
 use App\Models\User;
+use App\Models\Workspace;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,11 +30,24 @@ class InviteMemberRequest extends FormRequest
      */
     public function rules(): array
     {
+        $workspace = app(Workspace::class);
+
         return [
             'email' => [
                 'required',
                 'email',
                 'max:255',
+                Rule::unique('workspace_invitations')
+                    ->where(function ($query) use ($workspace): void {
+                        $query->where('workspace_id', $workspace->id)
+                            ->whereNull('accepted_at')
+                            ->where('expires_at', '>', now());
+                    }),
+                function (string $attr, mixed $value, Closure $fail) use ($workspace): void {
+                    if ($workspace->members()->where('email', $value)->exists()) {
+                        $fail('This person is already a workspace member.');
+                    }
+                },
             ],
             'role' => [
                 'required',

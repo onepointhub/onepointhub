@@ -36,11 +36,15 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
-        Gate::define('manage-members', fn (User $user) => $user->can('manage-members'));
+        Gate::define('manage-members', fn (User $user) => $user->hasPermissionTo('manage-members'));
 
-        Gate::define('manage-workspace', fn (User $user) => $user->can('manage-workspace'));
+        Gate::define('manage-workspace', fn (User $user) => $user->hasPermissionTo('manage-workspace'));
 
         Gate::define('access-internal', function (User $user) {
+            if (! app()->bound(Workspace::class)) {
+                return false;
+            }
+
             $workspace = app(Workspace::class);
             setPermissionsTeamId($workspace->id);
 

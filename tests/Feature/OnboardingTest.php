@@ -77,3 +77,11 @@ it('saves currency and redirects to dashboard', function () {
 
     expect($workspace->fresh()->currency)->toBe('EUR');
 });
+
+it('returns a validation error for an invalid email in the onboarding invite step', function () {
+    [$user] = workspaceWithUser('owner');
+
+    $this->actingAs($user)
+        ->post(route('onboarding.invite.store'), ['emails' => 'not-a-valid-email'])
+        ->assertSessionHasErrors('emails');
+});

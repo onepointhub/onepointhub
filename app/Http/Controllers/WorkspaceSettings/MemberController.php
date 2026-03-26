@@ -46,8 +46,6 @@ class MemberController extends Controller
             'role' => $request->validated('role'),
         ]);
 
-        setPermissionsTeamId($workspace->id);
-
         $user->syncRoles([$request->validated('role')]);
 
         return redirect()->route('workspace.members.index');

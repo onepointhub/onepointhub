@@ -26,8 +26,8 @@ trait LogsActivity
                     'subject_type' => get_class($model),
                     'subject_id' => $id,
                     'properties' => $event === 'updated' ? [
-                        'old' => $model->getOriginal(),
-                        'new' => $model->getChanges(),
+                        'old' => collect($model->getOriginal())->except($model->getHidden())->all(),
+                        'new' => collect($model->getChanges())->except($model->getHidden())->all(),
                     ] : null,
                 ]);
             });

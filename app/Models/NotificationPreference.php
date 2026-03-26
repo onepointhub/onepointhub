@@ -27,8 +27,9 @@ class NotificationPreference extends Model
      */
     public static function emailEnabled(User $user, NotificationType $type): bool
     {
+        // @phpstan-ignore nullsafe.neverNull
         return static::where('user_id', $user->id)
             ->where('type', $type->value)
-            ->first()->email_enabled ?? true;
+            ->first()?->email_enabled ?? true;
     }
 }

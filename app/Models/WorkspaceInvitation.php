@@ -6,11 +6,13 @@ use App\Models\Concerns\LogsActivity;
 use Carbon\Carbon;
 use Database\Factories\WorkspaceInvitationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['workspace_id', 'email', 'role', 'token', 'expires_at', 'accepted_at'])]
+#[Hidden(['token'])]
 class WorkspaceInvitation extends Model
 {
     /** @use HasFactory<WorkspaceInvitationFactory> */

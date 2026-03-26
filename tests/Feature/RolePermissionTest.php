@@ -38,3 +38,10 @@ it('client cannot access internal routes', function () {
     $this->actingAs($client)->get(route('dashboard'))
         ->assertForbidden();
 });
+
+it('access-internal gate returns false when no workspace is bound', function () {
+    $user = User::factory()->create();
+    app()->forgetInstance(Workspace::class);
+
+    expect($user->can('access-internal'))->toBeFalse();
+});
