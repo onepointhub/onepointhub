@@ -21,6 +21,12 @@ export interface AppNotification {
   created_at: string
 }
 
+export interface WorkspaceItem {
+  id: number
+  name: string
+  slug: string
+}
+
 declare module '@inertiajs/core' {
   export interface InertiaConfig {
     sharedPageProps: {
@@ -31,6 +37,8 @@ declare module '@inertiajs/core' {
         unread_count: number
         recent: AppNotification[]
       }
+      workspace: WorkspaceItem | null
+      workspaces: WorkspaceItem[]
       [key: string]: unknown
     }
   }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -60,6 +61,36 @@ class HandleInertiaRequests extends Middleware
                         'created_at' => $n->created_at->toISOString(),
                     ]),
                 ];
+            },
+            'workspace' => function (): ?array {
+                if (! app()->bound(Workspace::class)) {
+                    return null;
+                }
+
+                $workspace = app(Workspace::class);
+
+                return [
+                    'id' => $workspace->id,
+                    'name' => $workspace->name,
+                    'slug' => $workspace->slug,
+                ];
+            },
+            'workspaces' => function () use ($request): array {
+                $user = $request->user();
+
+                if (! $user) {
+                    return [];
+                }
+
+                return $user->workspaces()
+                    ->select(['workspaces.id', 'workspaces.name', 'workspaces.slug'])
+                    ->get()
+                    ->map(fn (Workspace $w) => [
+                        'id' => $w->id,
+                        'name' => $w->name,
+                        'slug' => $w->slug,
+                    ])
+                    ->all();
             },
         ];
     }
