@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\WorkspaceInvitation;
 use App\Notifications\MemberJoinedNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 it('notifies workspace owners when an invitation is accepted', function () {
     Notification::fake();
@@ -46,4 +47,42 @@ it('does not notify the new member themselves', function () {
         ->assertRedirect();
 
     Notification::assertNotSentTo($invitee, MemberJoinedNotification::class);
+});
+
+it('marks a single notification as read', function () {
+    [$user] = workspaceWithUser('member');
+
+    $user->notifications()->create([
+        'id' => (string) Str::uuid(),
+        'type' => MemberJoinedNotification::class,
+        'data' => ['type' => 'member_joined', 'message' => 'Someone joined'],
+        'read_at' => null,
+    ]);
+
+    $notification = $user->unreadNotifications()->first();
+
+    $this->actingAs($user)
+        ->patch(route('notifications.read', $notification->id))
+        ->assertRedirect();
+
+    expect($user->unreadNotifications()->count())->toBe(0);
+});
+
+it('marks all notifications as read', function () {
+    [$user] = workspaceWithUser('member');
+
+    foreach (range(1, 3) as $i) {
+        $user->notifications()->create([
+            'id' => (string) Str::uuid(),
+            'type' => MemberJoinedNotification::class,
+            'data' => ['type' => 'member_joined', 'message' => "Notification $i"],
+            'read_at' => null,
+        ]);
+    }
+
+    $this->actingAs($user)
+        ->post(route('notifications.read-all'))
+        ->assertRedirect();
+
+    expect($user->unreadNotifications()->count())->toBe(0);
 });

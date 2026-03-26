@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
@@ -68,6 +69,9 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
             Route::delete('members/{user}', [MemberController::class, 'destroy'])->name('members.destroy');
             Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
         });
+
+    Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 });
 
 Route::middleware('auth')->get('/invitations/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
