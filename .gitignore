@@ -22,3 +22,12 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+.mcp.json
+CLAUDE.md
+boost.json
+/.claude
+/docs/superpowers
+/.superpowers
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
