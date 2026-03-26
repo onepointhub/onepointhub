@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\WorkspaceSettings;
 
+use App\Enums\WorkspaceRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkspaceSettings\InviteMemberRequest;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
+use App\Notifications\MemberJoinedNotification;
 use App\Notifications\WorkspaceInvitationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,10 +51,21 @@ class InvitationController extends Controller
             abort(403, 'This invitation is not for your account.');
         }
 
+        /** @var Workspace $workspace */
+        $workspace = $invitation->workspace;
+
         if (! $user->workspaces()->where('workspaces.id', $invitation->workspace_id)->exists()) {
             setPermissionsTeamId($invitation->workspace_id);
             $user->workspaces()->attach($invitation->workspace_id, ['role' => $invitation->role]);
             $user->assignRole($invitation->role);
+
+            // Notify all owners and admins (excluding the new member)
+            $notifiables = $workspace->members()
+                ->wherePivotIn('role', [WorkspaceRole::Owner->value, WorkspaceRole::Admin->value])
+                ->where('user_id', '!=', $user->id)
+                ->get();
+
+            Notification::send($notifiables, new MemberJoinedNotification($user, $workspace));
         }
 
         $invitation->update(['accepted_at' => now()]);
