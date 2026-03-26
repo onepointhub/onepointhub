@@ -34,6 +34,9 @@ class OnboardingController extends Controller
         $user->workspaces()->attach($workspace->id, ['role' => 'owner']);
         session(['active_workspace_id' => $workspace->id]);
 
+        setPermissionsTeamId($workspace->id);
+        $user->assignRole('owner');
+
         return redirect()->route('onboarding.invite');
     }
 

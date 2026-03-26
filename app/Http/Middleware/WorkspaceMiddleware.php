@@ -48,6 +48,12 @@ class WorkspaceMiddleware
         // Also make it available as a request attribute for convenience.
         $request->attributes->set('workspace', $workspace);
 
+        // Establish the Spatie Permission team context immediately so that any
+        // role/permission check later in the request (Gate, middleware, controller)
+        // uses the correct workspace scope. Without this, roles loaded before
+        // Gate::before runs would be fetched with team_id = null and cached as empty.
+        setPermissionsTeamId($workspace->id);
+
         return $next($request);
     }
 }

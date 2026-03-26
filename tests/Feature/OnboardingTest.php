@@ -34,6 +34,9 @@ it('creates workspace and assigns owner role to user', function () {
 
     expect($workspace)->not->toBeNull()
         ->and($user->workspaces()->where('workspaces.id', $workspace->id)->exists())->toBeTrue();
+
+    setPermissionsTeamId($workspace->id);
+    expect($user->hasRole('owner'))->toBeTrue();
 });
 
 it('renders step 2 — invite team (skippable)', function () {
