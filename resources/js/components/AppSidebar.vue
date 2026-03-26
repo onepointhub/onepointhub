@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import type { NavItem } from '@/types'
-import { Link } from '@inertiajs/vue3'
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next'
-import AppLogo from '@/components/AppLogo.vue'
+import { LayoutGrid } from 'lucide-vue-next'
 import ModeToggle from '@/components/ModeToggle.vue'
-import NavFooter from '@/components/NavFooter.vue'
 import NavMain from '@/components/NavMain.vue'
 import NavUser from '@/components/NavUser.vue'
 import {
@@ -12,10 +9,8 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import WorkspaceSwitcher from '@/components/WorkspaceSwitcher.vue'
 import { dashboard } from '@/routes'
 
 const mainNavItems: NavItem[] = [
@@ -25,41 +20,21 @@ const mainNavItems: NavItem[] = [
     icon: LayoutGrid,
   },
 ]
-
-const footerNavItems: NavItem[] = [
-  {
-    title: 'Repository',
-    href: 'https://github.com/laravel/vue-starter-kit',
-    icon: FolderGit2,
-  },
-  {
-    title: 'Documentation',
-    href: 'https://laravel.com/docs/starter-kits#vue',
-    icon: BookOpen,
-  },
-]
 </script>
 
 <template>
   <Sidebar collapsible="icon" variant="inset">
     <SidebarHeader>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton size="lg" as-child>
-            <Link :href="dashboard()">
-              <AppLogo />
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
+      <WorkspaceSwitcher />
     </SidebarHeader>
 
     <SidebarContent>
       <NavMain :items="mainNavItems" />
     </SidebarContent>
+
     <ModeToggle />
+
     <SidebarFooter>
-      <NavFooter :items="footerNavItems" />
       <NavUser />
     </SidebarFooter>
   </Sidebar>
