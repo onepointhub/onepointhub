@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
 use App\Http\Controllers\Settings\SecurityController;
@@ -37,6 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('settings/password', [SecurityController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('user-password.update');
+
+    Route::get('settings/notifications', [NotificationPreferenceController::class, 'edit'])->name('notifications.preferences.edit');
+    Route::patch('settings/notifications/{type}', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
 });
 
 // ---------------------------------------------------------------------------
