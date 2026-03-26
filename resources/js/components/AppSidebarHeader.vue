@@ -3,6 +3,7 @@ import type { BreadcrumbItem } from '@/types'
 import { usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import NotificationBell from '@/components/NotificationBell.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -34,7 +35,9 @@ const auth = computed(() => page.props.auth)
           <Breadcrumbs :breadcrumbs="breadcrumbs" />
         </template>
       </div>
-      <div>
+      <div class="flex items-center gap-1">
+        <NotificationBell />
+
         <DropdownMenu>
           <DropdownMenuTrigger :as-child="true">
             <Button
