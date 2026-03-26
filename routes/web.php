@@ -9,6 +9,7 @@ use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\WorkspaceSettings\ActivityLogController;
 use App\Http\Controllers\WorkspaceSettings\InvitationController;
 use App\Http\Controllers\WorkspaceSettings\MemberController;
+use App\Http\Controllers\WorkspaceSwitchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => 'Home page')->name('home');
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('settings/notifications/{type}', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
 
     Route::get('activity', [ActivityLogController::class, 'index'])->name('workspace.activity-log.index');
+
+    Route::post('workspace/switch', WorkspaceSwitchController::class)->name('workspace.switch');
 });
 
 // ---------------------------------------------------------------------------
