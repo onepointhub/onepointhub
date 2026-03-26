@@ -13,12 +13,24 @@ declare module 'vite/client' {
   }
 }
 
+export interface AppNotification {
+  id: string
+  type: string | null
+  message: string
+  read_at: string | null
+  created_at: string
+}
+
 declare module '@inertiajs/core' {
   export interface InertiaConfig {
     sharedPageProps: {
       name: string
       auth: Auth
       sidebarOpen: boolean
+      notifications: {
+        unread_count: number
+        recent: AppNotification[]
+      }
       [key: string]: unknown
     }
   }
