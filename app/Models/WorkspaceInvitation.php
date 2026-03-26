@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\LogsActivity;
 use Carbon\Carbon;
 use Database\Factories\WorkspaceInvitationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class WorkspaceInvitation extends Model
 {
     /** @use HasFactory<WorkspaceInvitationFactory> */
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     /**
      * Get the attributes that should be cast.

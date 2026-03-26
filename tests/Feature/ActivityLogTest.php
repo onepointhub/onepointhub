@@ -1,8 +1,11 @@
 <?php
 
 use App\Models\ActivityLog;
+use App\Models\User;
 use App\Models\Workspace;
+use App\Models\WorkspaceInvitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -21,4 +24,74 @@ it('can be created and has no updated_at column', function () {
     expect($log->id)->toBeInt()
         ->and($log->event)->toBe('created')
         ->and($log->updated_at)->toBeNull();
+});
+
+it('records a created event when a LogsActivity model is created', function () {
+    [$user, $workspace] = workspaceWithUser('owner');
+    app()->instance(Workspace::class, $workspace);
+
+    $this->actingAs($user);
+
+    WorkspaceInvitation::create([
+        'workspace_id' => $workspace->id,
+        'email' => 'invite@example.com',
+        'role' => 'member',
+        'token' => Str::random(64),
+        'expires_at' => now()->addHours(48),
+    ]);
+
+    $log = ActivityLog::where('workspace_id', $workspace->id)
+        ->where('event', 'created')
+        ->where('subject_type', WorkspaceInvitation::class)
+        ->first();
+
+    expect($log)->not->toBeNull()
+        ->and($log->user_id)->toBe($user->id)
+        ->and($log->properties)->toBeNull();
+});
+
+it('records an updated event with old and new values', function () {
+    [$user, $workspace] = workspaceWithUser('owner');
+    app()->instance(Workspace::class, $workspace);
+
+    $this->actingAs($user);
+
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $workspace->id,
+        'email' => 'invite2@example.com',
+        'role' => 'member',
+        'token' => Str::random(64),
+        'expires_at' => now()->addHours(48),
+    ]);
+
+    $invitation->update(['accepted_at' => now()]);
+
+    $log = ActivityLog::where('workspace_id', $workspace->id)
+        ->where('event', 'updated')
+        ->where('subject_type', WorkspaceInvitation::class)
+        ->first();
+
+    expect($log)->not->toBeNull()
+        ->and($log->properties)->toHaveKey('old')
+        ->and($log->properties)->toHaveKey('new');
+});
+
+it('does not log when workspace is not bound to the container', function () {
+    // Simulate a console/seeder context where no workspace is in the container.
+    // workspaceWithUser binds the workspace, so we need a fresh container binding check.
+    $workspace = Workspace::factory()->create();
+    User::factory()->create();
+
+    // Ensure the workspace is NOT bound
+    app()->forgetInstance(Workspace::class);
+
+    WorkspaceInvitation::create([
+        'workspace_id' => $workspace->id,
+        'email' => 'console@example.com',
+        'role' => 'member',
+        'token' => Str::random(64),
+        'expires_at' => now()->addHours(48),
+    ]);
+
+    expect(ActivityLog::where('workspace_id', $workspace->id)->count())->toBe(0);
 });

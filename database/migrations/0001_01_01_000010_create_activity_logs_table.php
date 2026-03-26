@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('workspace_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('event'); // 'created' | 'updated' | 'deleted'
             $table->string('subject_type'); // fully qualified model class name
             $table->string('subject_id'); // accommodates any ID type (int or string)
