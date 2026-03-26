@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Settings\NotificationPreferenceController;
@@ -18,7 +19,7 @@ Route::get('/', fn () => 'Home page')->name('home');
 // Authenticated routes
 // ---------------------------------------------------------------------------
 Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // ---------------------------------------------------------------------------
