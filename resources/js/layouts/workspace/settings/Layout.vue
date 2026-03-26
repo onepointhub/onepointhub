@@ -6,12 +6,17 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useCurrentUrl } from '@/composables/useCurrentUrl'
 import { toUrl } from '@/lib/utils'
+import { index as activityLogIndex } from '@/routes/workspace/activity-log'
 import { index as membersIndex } from '@/routes/workspace/members'
 
 const sidebarNavItems: NavItem[] = [
   {
     title: 'Members',
     href: membersIndex(),
+  },
+  {
+    title: 'Activity Log',
+    href: activityLogIndex(),
   },
 ]
 
