@@ -6,6 +6,7 @@ use App\Enums\NotificationType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateNotificationPreferenceRequest;
 use App\Models\NotificationPreference;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,10 @@ class NotificationPreferenceController extends Controller
 {
     public function edit(Request $request): Response
     {
-        $preferences = NotificationPreference::where('user_id', $request->user()->id)
+        /** @var User $user */
+        $user = $request->user();
+
+        $preferences = NotificationPreference::where('user_id', $user->id)
             ->get()
             ->keyBy('type')
             ->map(fn ($p) => ['email_enabled' => $p->email_enabled]);
@@ -28,13 +32,16 @@ class NotificationPreferenceController extends Controller
 
     public function update(UpdateNotificationPreferenceRequest $request, string $type): RedirectResponse
     {
+        /** @var User $user */
+        $user = $request->user();
+
         abort_unless(
             in_array($type, array_column(NotificationType::cases(), 'value'), strict: true),
             404
         );
 
         NotificationPreference::updateOrCreate(
-            ['user_id' => $request->user()->id, 'type' => $type],
+            ['user_id' => $user->id, 'type' => $type],
             ['email_enabled' => $request->boolean('email_enabled')]
         );
 

@@ -11,6 +11,7 @@ export default antfu({
   vue: {
     overrides: {
       'vue/no-template-shadow': ['error', { allow: ['errors'] }],
+      'e18e/prefer-static-regex': 'off',
     },
   },
 })

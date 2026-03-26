@@ -36,7 +36,7 @@ function toggle(type: string, enabled: boolean) {
 }
 
 function label(type: string): string {
-  return type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+  return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 </script>
 
@@ -66,7 +66,7 @@ function label(type: string): string {
             <Checkbox
               :id="type"
               :checked="isEmailEnabled(type)"
-              @update:checked="(val) => toggle(type, val as boolean)"
+              @update:checked="(val: boolean) => toggle(type, val as boolean)"
             />
             <Label
               :for="type"
