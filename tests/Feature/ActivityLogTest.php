@@ -6,6 +6,7 @@ use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Inertia\Testing\AssertableInertia;
 
 uses(RefreshDatabase::class);
 
@@ -94,4 +95,48 @@ it('does not log when workspace is not bound to the container', function () {
     ]);
 
     expect(ActivityLog::where('workspace_id', $workspace->id)->count())->toBe(0);
+});
+
+it('renders the activity log page for a workspace owner', function () {
+    [$user, $workspace] = workspaceWithUser('owner');
+
+    ActivityLog::create([
+        'workspace_id' => $workspace->id,
+        'user_id' => $user->id,
+        'event' => 'created',
+        'subject_type' => WorkspaceInvitation::class,
+        'subject_id' => '1',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('workspace.activity-log.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('workspace/settings/ActivityLog')
+            ->has('logs', 1)
+            ->has('logs.0', fn ($log) => $log
+                ->where('event', 'created')
+                ->where('subject_type', 'WorkspaceInvitation')
+                ->etc()
+            )
+        );
+});
+
+it('renders the activity log page for a workspace admin', function () {
+    [$admin, $workspace] = workspaceWithUser('admin');
+
+    $this->actingAs($admin)
+        ->get(route('workspace.activity-log.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('workspace/settings/ActivityLog')
+        );
+});
+
+it('denies activity log access to workspace members', function () {
+    [$member, $workspace] = workspaceWithUser('member');
+
+    $this->actingAs($member)
+        ->get(route('workspace.activity-log.index'))
+        ->assertForbidden();
 });

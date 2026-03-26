@@ -6,6 +6,7 @@ use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
 use App\Http\Controllers\Settings\SecurityController;
+use App\Http\Controllers\WorkspaceSettings\ActivityLogController;
 use App\Http\Controllers\WorkspaceSettings\InvitationController;
 use App\Http\Controllers\WorkspaceSettings\MemberController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('settings/notifications', [NotificationPreferenceController::class, 'edit'])->name('notifications.preferences.edit');
     Route::patch('settings/notifications/{type}', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
+
+    Route::get('activity', [ActivityLogController::class, 'index'])->name('workspace.activity-log.index');
 });
 
 // ---------------------------------------------------------------------------
