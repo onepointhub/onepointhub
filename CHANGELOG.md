@@ -16,6 +16,8 @@ breaking changes between any two versions — see upgrade notes per version.
 - Module service provider contract (`ModuleServiceProvider`) and registry (`ModuleRegistry`) with auto-discovery from `app/Modules/`
 - `CoreServiceProvider` stub proving the module contract
 - `onepointhub:modules` Artisan command listing all registered modules
+- `tests/Integration/` test suite for tests that hit real external services (no database refresh)
+- Coverage report uploaded as a CI artifact on PHP 8.4 builds
 
 ---
 
