@@ -12,6 +12,13 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ## [Unreleased]
 
+### Added
+- Module service provider contract (`ModuleServiceProvider`) and registry (`ModuleRegistry`) with auto-discovery from `app/Modules/`
+- `CoreServiceProvider` stub proving the module contract
+- `onepointhub:modules` Artisan command listing all registered modules
+
+---
+
 ## [0.1.0] — 2026-03-26
 
 ### Added
