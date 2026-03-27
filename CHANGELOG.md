@@ -20,6 +20,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Coverage report uploaded as a CI artifact on PHP 8.4 builds
 - `DevSeeder` creating a demo workspace with three pre-built users (owner/admin/member at `*@demo.test`), idempotent — safe to run multiple times
 - `CONTRIBUTING.md` with local setup, Docker setup, testing, code style, and module development guidelines
+- `onepointhub:install` CLI installer using Laravel Prompts — checks PHP extension requirements, runs migrations, seeds permissions, creates first admin user; supports `--fresh` and `--no-interaction` flags
 
 ---
 

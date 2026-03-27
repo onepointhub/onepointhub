@@ -17,7 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @property WorkspaceUser $pivot
  */
-#[Fillable(['name', 'email', 'password', 'timezone'])]
+#[Fillable(['name', 'email', 'password', 'timezone', 'email_verified_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
