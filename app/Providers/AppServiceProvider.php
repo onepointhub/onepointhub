@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\ModuleRegistry;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+            ModuleRegistry::class,
+            fn ($app) => new ModuleRegistry($app),
+        );
     }
 
     /**
@@ -24,6 +28,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->discoverModules();
+    }
+
+    protected function discoverModules(): void
+    {
+        app(ModuleRegistry::class)->discover(app_path('Modules'));
     }
 
     /**
