@@ -18,6 +18,8 @@ breaking changes between any two versions — see upgrade notes per version.
 - `onepointhub:modules` Artisan command listing all registered modules
 - `tests/Integration/` test suite for tests that hit real external services (no database refresh)
 - Coverage report uploaded as a CI artifact on PHP 8.4 builds
+- `DevSeeder` creating a demo workspace with three pre-built users (owner/admin/member at `*@demo.test`), idempotent — safe to run multiple times
+- `CONTRIBUTING.md` with local setup, Docker setup, testing, code style, and module development guidelines
 
 ---
 
