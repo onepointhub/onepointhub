@@ -12,6 +12,25 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ## [Unreleased]
 
+### Added
+- Module service provider contract (`ModuleServiceProvider`) and registry (`ModuleRegistry`) with auto-discovery from `app/Modules/`
+- `CoreServiceProvider` stub proving the module contract
+- `onepointhub:modules` Artisan command listing all registered modules
+- `tests/Integration/` test suite for tests that hit real external services (no database refresh)
+- Coverage report uploaded as a CI artifact on PHP 8.4 builds
+- `DevSeeder` creating a demo workspace with three pre-built users (owner/admin/member at `*@demo.test`), idempotent — safe to run multiple times
+- `CONTRIBUTING.md` with local setup, Docker setup, testing, code style, and module development guidelines
+- `onepointhub:install` CLI installer using Laravel Prompts — checks PHP extension requirements, runs migrations, seeds permissions, creates first admin user; supports `--fresh` and `--no-interaction` flags
+- Docker Compose development environment with PHP-FPM, nginx, MySQL 8, Redis, and Mailpit (mail UI at `:8025`)
+- `Makefile` with `up`, `down`, `shell`, `install`, `test`, `migrate`, `seed`, `fresh`, and `logs` targets
+- `.env.docker` with Docker-specific environment defaults
+- `docs/development.md` covering both local PHP and Docker Compose setup options
+- CaptainHook pre-commit hooks running Pint (auto-format) and PHPStan (level 9 analysis) before every commit
+- Custom Inertia error pages (`Error.vue`) for 401, 403, 404, 419, 429, 500, and 503 responses with branded layout and home link
+- Optional Sentry error tracking integration via `SENTRY_DSN` environment variable
+
+---
+
 ## [0.1.0] — 2026-03-26
 
 ### Added
