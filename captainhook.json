@@ -1,0 +1,25 @@
+{
+  "pre-commit": {
+    "enabled": true,
+    "actions": [
+      {
+        "action": "vendor/bin/pint --dirty",
+        "options": [],
+        "conditions": []
+      },
+      {
+        "action": "vendor/bin/phpstan analyse --memory-limit=2G --no-progress",
+        "options": [],
+        "conditions": []
+      }
+    ]
+  },
+  "commit-msg": {
+    "enabled": false,
+    "actions": []
+  },
+  "pre-push": {
+    "enabled": false,
+    "actions": []
+  }
+}
