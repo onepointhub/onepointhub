@@ -21,7 +21,9 @@ Route::get('/', fn () => 'Home page')->name('home');
 // ---------------------------------------------------------------------------
 Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('search', SearchController::class)->name('search');
+    Route::get('search', SearchController::class)
+        ->middleware('throttle:30,1')
+        ->name('search');
 });
 
 // ---------------------------------------------------------------------------

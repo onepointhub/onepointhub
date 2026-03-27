@@ -24,7 +24,7 @@ class InstallCommand extends Command
      */
     protected $signature = 'onepointhub:install
                             {--fresh : Drop all tables and re-run migrations}
-                            {--no-interaction: Run in non-interactive mode using env defaults';
+                            {--no-interaction: Run in non-interactive mode using env defaults}';
 
     /**
      * Execute the console command.
@@ -88,7 +88,7 @@ class InstallCommand extends Command
 
     private function createAdminUser(): void
     {
-        if (! confirm('Crete an admin user?')) {
+        if (! confirm('Create an admin user?')) {
             return;
         }
 
