@@ -26,6 +26,8 @@ breaking changes between any two versions — see upgrade notes per version.
 - `.env.docker` with Docker-specific environment defaults
 - `docs/development.md` covering both local PHP and Docker Compose setup options
 - CaptainHook pre-commit hooks running Pint (auto-format) and PHPStan (level 9 analysis) before every commit
+- Custom Inertia error pages (`Error.vue`) for 401, 403, 404, 419, 429, 500, and 503 responses with branded layout and home link
+- Optional Sentry error tracking integration via `SENTRY_DSN` environment variable
 
 ---
 
