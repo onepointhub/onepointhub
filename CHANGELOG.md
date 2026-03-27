@@ -25,6 +25,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - `Makefile` with `up`, `down`, `shell`, `install`, `test`, `migrate`, `seed`, `fresh`, and `logs` targets
 - `.env.docker` with Docker-specific environment defaults
 - `docs/development.md` covering both local PHP and Docker Compose setup options
+- CaptainHook pre-commit hooks running Pint (auto-format) and PHPStan (level 9 analysis) before every commit
 
 ---
 
