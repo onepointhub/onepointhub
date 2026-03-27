@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
@@ -20,6 +21,7 @@ Route::get('/', fn () => 'Home page')->name('home');
 // ---------------------------------------------------------------------------
 Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('search', SearchController::class)->name('search');
 });
 
 // ---------------------------------------------------------------------------
