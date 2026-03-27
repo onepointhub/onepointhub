@@ -7,6 +7,7 @@ export default antfu({
     '**/js/routes/**',
     '**/js/actions/**',
     '**/js/components/ui/**',
+    '**/docker-compose.yml',
   ],
   vue: {
     overrides: {
