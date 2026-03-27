@@ -48,5 +48,13 @@ jobs:
       - name: Build Assets
         run: npm run build
 
-      - name: Run Tests
-        run: ./vendor/bin/pest
+      - name: Run Tests with Coverage
+        run: ./vendor/bin/pest --coverage-clover=coverage.xml
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v6
+        if: matrix.php-version == '8.4'
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 7

@@ -23,6 +23,10 @@ pest()->extend(TestCase::class)
     ->beforeEach(fn () => $this->seed(PermissionSeeder::class))
     ->in('Feature');
 
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
+    ->in('Integration');
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
