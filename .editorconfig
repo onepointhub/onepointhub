@@ -17,5 +17,5 @@ trim_trailing_whitespace = false
 indent_size = 2
 tab_width = 2
 
-[{*.json,*.ts,eslint.config.mjs}]
+[{*.json,*.ts,eslint.config.mjs,docker-compose.yml}]
 indent_size = 2

@@ -21,6 +21,10 @@ breaking changes between any two versions — see upgrade notes per version.
 - `DevSeeder` creating a demo workspace with three pre-built users (owner/admin/member at `*@demo.test`), idempotent — safe to run multiple times
 - `CONTRIBUTING.md` with local setup, Docker setup, testing, code style, and module development guidelines
 - `onepointhub:install` CLI installer using Laravel Prompts — checks PHP extension requirements, runs migrations, seeds permissions, creates first admin user; supports `--fresh` and `--no-interaction` flags
+- Docker Compose development environment with PHP-FPM, nginx, MySQL 8, Redis, and Mailpit (mail UI at `:8025`)
+- `Makefile` with `up`, `down`, `shell`, `install`, `test`, `migrate`, `seed`, `fresh`, and `logs` targets
+- `.env.docker` with Docker-specific environment defaults
+- `docs/development.md` covering both local PHP and Docker Compose setup options
 
 ---
 
