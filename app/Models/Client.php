@@ -7,6 +7,7 @@ use App\Enums\ClientType;
 use App\Models\Concerns\BelongsToWorkspace;
 use App\Models\Concerns\LogsActivity;
 use App\Models\Scopes\WorkspaceScope;
+use Carbon\CarbonImmutable;
 use Database\Factories\ClientFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * @property CarbonImmutable $created_at
+ * @property ClientType $type
+ * @property ClientStatus $status
+ */
 #[Fillable(['name', 'slug', 'type', 'status', 'currency', 'website', 'vat_number', 'notes', 'settings'])]
 class Client extends Model
 {
