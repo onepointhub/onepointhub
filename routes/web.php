@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
@@ -90,3 +91,14 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
 });
 
 Route::middleware('auth')->get('/invitations/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
+
+// ---------------------------------------------------------------------------
+// Clients routes
+// ---------------------------------------------------------------------------
+Route::middleware(['auth', 'verified', 'workspace', 'internal'])
+    ->prefix('clients')
+    ->name('clients.')
+    ->group(function () {
+        Route::get('/', [ClientController::class, 'index'])->name('index');
+        Route::get('export', [ClientController::class, 'export'])->name('export');
+    });
