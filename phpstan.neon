@@ -6,5 +6,3 @@ parameters:
   level: 9
   paths:
     - app/
-  ignoreErrors:
-    - '#is used zero times#'

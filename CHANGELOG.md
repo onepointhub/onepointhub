@@ -13,6 +13,13 @@ breaking changes between any two versions — see upgrade notes per version.
 ## [Unreleased]
 
 ### Added
+- Clients module: `clients`, `client_contacts`, `client_addresses` tables with models, enums, factories, and `ClientsServiceProvider` (#21)
+
+---
+
+## [0.2.0] - 2026-03-27
+
+### Added
 - Module service provider contract (`ModuleServiceProvider`) and registry (`ModuleRegistry`) with auto-discovery from `app/Modules/`
 - `CoreServiceProvider` stub proving the module contract
 - `onepointhub:modules` Artisan command listing all registered modules
