@@ -60,6 +60,7 @@ class PermissionSeeder extends Seeder
             'update-project',
             'view-client',
             'create-client',
+            'update-client',
         ]);
 
         Role::firstOrCreate(['name' => 'client']);
