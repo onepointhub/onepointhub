@@ -36,6 +36,7 @@ const form = useForm({
   website: props.client.website ?? '',
   vat_number: props.client.vat_number ?? '',
   notes: props.client.notes ?? '',
+  custom_fields: [],
 })
 
 function submit() {

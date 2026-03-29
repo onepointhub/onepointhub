@@ -25,6 +25,7 @@ const form = useForm({
   website: '',
   vat_number: '',
   notes: '',
+  custom_fields: [],
 })
 
 onMounted(() => {
