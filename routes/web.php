@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Clients\ClientBulkController;
+use App\Http\Controllers\Clients\ClientContactController;
 use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
@@ -111,4 +112,11 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         Route::patch('{client}/restore', [ClientController::class, 'restore'])->name('restore');
         Route::delete('{client}', [ClientController::class, 'destroy'])->name('destroy')->withTrashed();
         Route::post('bulk-archive', [ClientBulkController::class, 'archive'])->name('bulk-archive');
+        Route::prefix('{client}/contacts')
+            ->name('contacts.')
+            ->group(function () {
+                Route::post('/', [ClientContactController::class, 'store'])->name('store');
+                Route::patch('{contact}', [ClientContactController::class, 'update'])->name('update');
+                Route::delete('{contact}', [ClientContactController::class, 'destroy'])->name('destroy');
+            });
     });
