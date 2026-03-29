@@ -101,4 +101,9 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
     ->group(function () {
         Route::get('/', [ClientController::class, 'index'])->name('index');
         Route::get('export', [ClientController::class, 'export'])->name('export');
+        Route::get('create', [ClientController::class, 'create'])->name('create');
+        Route::post('/', [ClientController::class, 'store'])->name('store');
+        Route::get('{client}/edit', [ClientController::class, 'edit'])->name('edit');
+        Route::patch('{client}', [ClientController::class, 'update'])->name('update');
+        Route::get('{client}', [ClientController::class, 'show'])->name('show');
     });

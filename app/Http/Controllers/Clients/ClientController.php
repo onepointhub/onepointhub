@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Clients;
 use App\Enums\ClientStatus;
 use App\Enums\ClientType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Clients\StoreClientRequest;
+use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\Client;
 use App\Models\Workspace;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -105,5 +108,61 @@ class ClientController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function create(): InertiaResponse
+    {
+        Gate::authorize('create-client');
+
+        return Inertia::render('clients/Create', [
+            'statuses' => array_column(ClientStatus::cases(), 'value'),
+            'types' => array_column(ClientType::cases(), 'value'),
+        ]);
+    }
+
+    public function store(StoreClientRequest $request): RedirectResponse
+    {
+        $client = Client::create($request->validated());
+
+        return redirect()->route('clients.show', $client);
+    }
+
+    public function edit(Client $client): InertiaResponse
+    {
+        Gate::authorize('update-client');
+
+        return Inertia::render('clients/Edit', [
+            'client' => [
+                'id' => $client->id,
+                'name' => $client->name,
+                'type' => $client->type->value,
+                'status' => $client->status->value,
+                'currency' => $client->currency,
+                'website' => $client->website,
+                'vat_number' => $client->vat_number,
+                'notes' => $client->notes,
+            ],
+            'statuses' => array_column(ClientStatus::cases(), 'value'),
+            'types' => array_column(ClientType::cases(), 'value'),
+        ]);
+    }
+
+    public function update(UpdateClientRequest $request, Client $client): RedirectResponse
+    {
+        $client->update($request->validated());
+
+        return redirect()->route('clients.show', $client);
+    }
+
+    public function show(Client $client): InertiaResponse
+    {
+        Gate::authorize('view-client');
+
+        return Inertia::render('clients/Show', [
+            'client' => [
+                'id' => $client->id,
+                'name' => $client->name,
+            ],
+        ]);
     }
 }
