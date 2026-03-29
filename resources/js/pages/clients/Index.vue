@@ -9,8 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AppLayout from '@/layouts/AppLayout.vue'
 import {
+  create as clientsCreate,
   exportMethod as clientsExport,
   index as clientsIndex,
+  show as clientsShow,
 } from '@/routes/clients'
 
 interface Client {
@@ -108,7 +110,7 @@ function exportUrl(): string {
               Export CSV
             </Button>
           </a>
-          <Link v-if="canCreate" href="#">
+          <Link v-if="canCreate" :href="clientsCreate()">
             <Button size="sm">
               Add Client
             </Button>
@@ -129,7 +131,7 @@ function exportUrl(): string {
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
+            <SelectItem value="all">
               All statuses
             </SelectItem>
             <SelectItem v-for="s in statuses" :key="s" :value="s" class="capitalize">
@@ -143,7 +145,7 @@ function exportUrl(): string {
             <SelectValue placeholder="All types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
+            <SelectItem value="all">
               All types
             </SelectItem>
             <SelectItem v-for="t in types" :key="t" :value="t" class="capitalize">
@@ -161,7 +163,7 @@ function exportUrl(): string {
         <p class="text-muted-foreground text-sm">
           No clients found.
         </p>
-        <Link v-if="canCreate && !filters.search && !filters.status && !filters.type" href="#" class="mt-3 inline-block">
+        <Link v-if="canCreate && !filters.search && !filters.status && !filters.type" :href="clientsCreate()" class="mt-3 inline-block">
           <Button size="sm">
             Add your first client
           </Button>
@@ -185,6 +187,7 @@ function exportUrl(): string {
               v-for="client in clients.data"
               :key="client.id"
               class="cursor-pointer"
+              @click="router.visit(clientsShow({ client: client.id }))"
             >
               <TableCell class="font-medium">
                 {{ client.name }}
