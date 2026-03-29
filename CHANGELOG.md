@@ -17,6 +17,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Clients module: paginated client list with status/type filters, name and email search, and CSV export (#22)
 - Clients module: create and edit forms with server-side validation, inline errors, and localStorage draft persistence (#23)
 - Clients module: archive/restore, soft-delete with 30-day recovery window, and bulk archive from list view (#29)
+- Clients module: add/edit/remove contacts, primary contact designation, and auto-promotion on primary deletion (#24)
 
 ---
 
