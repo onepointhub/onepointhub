@@ -13,6 +13,7 @@ export default antfu({
     overrides: {
       'vue/no-template-shadow': ['error', { allow: ['errors'] }],
       'e18e/prefer-static-regex': 'off',
+      'vue/no-mutating-props': 'off',
     },
   },
 })
