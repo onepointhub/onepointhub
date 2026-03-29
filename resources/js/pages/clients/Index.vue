@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@/types'
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AppLayout from '@/layouts/AppLayout.vue'
 import {
+  bulkArchive as clientsBulkArchive,
   create as clientsCreate,
   exportMethod as clientsExport,
   index as clientsIndex,
@@ -92,6 +94,30 @@ function exportUrl(): string {
   }
   return `${clientsExport()}?${params.toString()}`
 }
+
+const selectedIds = ref<number[]>([])
+
+const allSelected = computed(() => props.clients.data.length > 0 && selectedIds.value.length === props.clients.data.length)
+
+function toggleAll() {
+  selectedIds.value = allSelected.value ? [] : props.clients.data.map(c => c.id)
+}
+
+function toggleClient(id: number) {
+  const idx = selectedIds.value.indexOf(id)
+  if (idx >= 0) {
+    selectedIds.value.splice(idx, 1)
+  }
+  else {
+    selectedIds.value.push(id)
+  }
+}
+
+function bulkArchive() {
+  router.post(clientsBulkArchive(), { ids: selectedIds.value }, {
+    onSuccess: () => { selectedIds.value = [] },
+  })
+}
 </script>
 
 <template>
@@ -172,9 +198,21 @@ function exportUrl(): string {
 
       <!-- Table -->
       <div v-else class="rounded-lg border">
+        <div v-if="selectedIds.length > 0" class="flex items-center gap-3 rounded-lg bg-muted px-4 py-2">
+          <span class="text-sm text-muted-foreground">{{ selectedIds.length }} selected</span>
+          <Button size="sm" variant="outline" @click="bulkArchive">
+            Archive selected
+          </Button>
+          <Button size="sm" variant="ghost" @click="selectedIds = []">
+            Clear
+          </Button>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead class="w-10">
+                <Checkbox :checked="allSelected" @update:checked="toggleAll" />
+              </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Currency</TableHead>
@@ -189,6 +227,12 @@ function exportUrl(): string {
               class="cursor-pointer"
               @click="router.visit(clientsShow({ client: client.id }))"
             >
+              <TableCell @click.stop>
+                <Checkbox
+                  :checked="selectedIds.includes(client.id)"
+                  @update:checked="toggleClient(client.id)"
+                />
+              </TableCell>
               <TableCell class="font-medium">
                 {{ client.name }}
               </TableCell>

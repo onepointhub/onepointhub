@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Clients\ClientBulkController;
 use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
@@ -106,4 +107,8 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         Route::get('{client}/edit', [ClientController::class, 'edit'])->name('edit');
         Route::patch('{client}', [ClientController::class, 'update'])->name('update');
         Route::get('{client}', [ClientController::class, 'show'])->name('show');
+        Route::patch('{client}/archive', [ClientController::class, 'archive'])->name('archive');
+        Route::patch('{client}/restore', [ClientController::class, 'restore'])->name('restore');
+        Route::delete('{client}', [ClientController::class, 'destroy'])->name('destroy')->withTrashed();
+        Route::post('bulk-archive', [ClientBulkController::class, 'archive'])->name('bulk-archive');
     });

@@ -49,6 +49,7 @@ class PermissionSeeder extends Seeder
             'view-client',
             'create-client',
             'update-client',
+            'delete-client',
             'manage-portal',
             'view-activity-log',
         ]);

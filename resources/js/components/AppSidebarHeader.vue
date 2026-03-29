@@ -3,6 +3,7 @@ import type { BreadcrumbItem } from '@/types'
 import { usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import ModeToggle from '@/components/ModeToggle.vue'
 import NotificationBell from '@/components/NotificationBell.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -37,6 +38,8 @@ const auth = computed(() => page.props.auth)
       </div>
       <div class="flex items-center gap-1">
         <NotificationBell />
+
+        <ModeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger :as-child="true">
