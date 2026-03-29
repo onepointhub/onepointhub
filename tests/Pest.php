@@ -78,12 +78,14 @@ function workspaceWithUser(string $role = 'member'): array
 /**
  * Authenticate as a workspace member with the given role.
  * Binds workspace and user to the container and session.
+ *
+ * @return array{0: User, 1: Workspace}
  */
-function actingAsWorkspaceMember(string $role = 'member'): User
+function actingAsWorkspaceMember(string $role = 'member'): array
 {
-    [$user] = workspaceWithUser($role);
+    [$user, $workspace] = workspaceWithUser($role);
 
     test()->actingAs($user);
 
-    return $user;
+    return [$user, $workspace];
 }

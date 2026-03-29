@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3'
+import CustomFieldSection from '@/components/clients/CustomFieldSection.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+
+interface CustomField {
+  id: number
+  label: string
+  type: string
+  options: string[] | null
+}
 
 interface ClientFormData {
   name: string
@@ -14,12 +22,14 @@ interface ClientFormData {
   website: string
   vat_number: string
   notes: string
+  custom_fields: Record<number, string | null>
 }
 
 interface Props {
   form: InertiaForm<ClientFormData>
   statuses: string[]
   types: string[]
+  customFields?: CustomField[]
   submitLabel?: string
 }
 
@@ -112,6 +122,9 @@ const props = withDefaults(defineProps<Props>(), {
         {{ form.errors.notes }}
       </p>
     </div>
+
+    <!-- Custom Fields -->
+    <CustomFieldSection :fields="customFields" :form="form" />
 
     <div class="flex justify-end gap-3">
       <slot name="cancel" />

@@ -18,6 +18,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Clients module: create and edit forms with server-side validation, inline errors, and localStorage draft persistence (#23)
 - Clients module: archive/restore, soft-delete with 30-day recovery window, and bulk archive from list view (#29)
 - Clients module: add/edit/remove contacts, primary contact designation, and auto-promotion on primary deletion (#24)
+- Clients module: workspace-scoped EAV custom fields (text, number, date, select, checkbox) displayed on client forms and included in CSV export (#26)
 
 ---
 

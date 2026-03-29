@@ -10,6 +10,8 @@ use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\ActivityLog;
 use App\Models\Client;
 use App\Models\ClientContact;
+use App\Models\CustomFieldDefinition;
+use App\Models\CustomFieldValue;
 use App\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -80,7 +82,14 @@ class ClientController extends Controller
             /** @var resource $handle */
             $handle = fopen('php://output', 'w');
 
-            fputcsv($handle, ['ID', 'Name', 'Type', 'Status', 'Currency', 'Website', 'VAT Number', 'Notes', 'Created At']);
+            $definitions = CustomFieldDefinition::orderBy('sort_order')->get();
+
+            /** @var array<int|string, string|null> $data */
+            $data = array_merge(
+                ['ID', 'Name', 'Type', 'Status', 'Currency', 'Website', 'VAT Number', 'Notes', 'Created At'],
+                $definitions->pluck('label')->all(),
+            );
+            fputcsv($handle, $data);
 
             Client::query()
                 ->when($request->input('ids'), function ($q, $ids) {
@@ -92,18 +101,28 @@ class ClientController extends Controller
                     fn ($q) => $q->where('status', $request->input('status')),
                 )
                 ->orderBy('name')
-                ->each(function (Client $client) use ($handle) {
-                    fputcsv($handle, [
-                        $client->id,
-                        $client->name,
-                        $client->type->value,
-                        $client->status->value,
-                        $client->currency,
-                        $client->website,
-                        $client->vat_number,
-                        $client->notes,
-                        $client->created_at->toDateTimeString(),
-                    ]);
+                ->each(function (Client $client) use ($handle, $definitions) {
+                    $values = CustomFieldValue::where('model_type', Client::class)
+                        ->where('model_id', $client->id)
+                        ->pluck('value', 'custom_field_definition_id');
+
+                    /** @var array<int|string, string|null> $data */
+                    $data = array_merge(
+                        [
+                            $client->id,
+                            $client->name,
+                            $client->type->value,
+                            $client->status->value,
+                            $client->currency,
+                            $client->website,
+                            $client->vat_number,
+                            $client->notes,
+                            $client->created_at->toDateTimeString(),
+                        ],
+                        $definitions->map(fn ($d) => $values[$d->id] ?? null)->all(),
+                    );
+
+                    fputcsv($handle, $data);
                 });
 
             fclose($handle);
@@ -119,12 +138,19 @@ class ClientController extends Controller
         return Inertia::render('clients/Create', [
             'statuses' => array_column(ClientStatus::cases(), 'value'),
             'types' => array_column(ClientType::cases(), 'value'),
+            'customFields' => $this->customFieldDefinitions(),
+            'customFieldValues' => [],
         ]);
     }
 
     public function store(StoreClientRequest $request): RedirectResponse
     {
         $client = Client::create($request->validated());
+
+        /** @var array<int|string, string|null> $values */
+        $values = $request->input('custom_fields', []);
+
+        $this->syncCustomFieldValues($client, $values);
 
         return redirect()->route('clients.show', $client);
     }
@@ -146,12 +172,19 @@ class ClientController extends Controller
             ],
             'statuses' => array_column(ClientStatus::cases(), 'value'),
             'types' => array_column(ClientType::cases(), 'value'),
+            'customFields' => $this->customFieldDefinitions(),
+            'customFieldValues' => $this->customFieldValues($client),
         ]);
     }
 
     public function update(UpdateClientRequest $request, Client $client): RedirectResponse
     {
         $client->update($request->validated());
+
+        /** @var array<int|string, string|null> $values */
+        $values = $request->input('custom_fields', []);
+
+        $this->syncCustomFieldValues($client, $values);
 
         return redirect()->route('clients.show', $client);
     }
@@ -190,6 +223,8 @@ class ClientController extends Controller
             'canEdit' => Gate::check('update-client'),
             'canDelete' => Gate::check('delete-client'),
             'canManagePortal' => Gate::check('manage-portal'),
+            'customFields' => $this->customFieldDefinitions(),
+            'customFieldValues' => $this->customFieldValues($client),
             // Deferred: only loaded when the Activity tab is visited
             'activity' => Inertia::defer(fn () => ActivityLog::query()
                 ->where('subject_type', Client::class)
@@ -244,5 +279,49 @@ class ClientController extends Controller
         }
 
         return redirect()->route('clients.index');
+    }
+
+    /**
+     * @return array<int, array{id: int, label: string, type: string, options: string|null}>
+     */
+    private function customFieldDefinitions(): array
+    {
+        return CustomFieldDefinition::orderBy('sort_order')
+            ->get()
+            ->map(fn (CustomFieldDefinition $field) => [
+                'id' => $field->id,
+                'label' => $field->label,
+                'type' => $field->type->value,
+                'options' => $field->options,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function customFieldValues(Client $client): array
+    {
+        return CustomFieldValue::where('model_type', Client::class)
+            ->where('model_id', $client->id)
+            ->pluck('value', 'custom_field_definition_id')
+            ->all();
+    }
+
+    /**
+     * @param  array<int|string, string|null>  $values
+     */
+    private function syncCustomFieldValues(Client $client, array $values): void
+    {
+        foreach ($values as $definitionId => $value) {
+            CustomFieldValue::updateOrCreate(
+                [
+                    'custom_field_definition_id' => (int) $definitionId,
+                    'model_type' => Client::class,
+                    'model_id' => $client->id,
+                ],
+                ['value' => $value],
+            );
+        }
     }
 }

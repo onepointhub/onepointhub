@@ -12,6 +12,7 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\WorkspaceSettings\ActivityLogController;
+use App\Http\Controllers\WorkspaceSettings\CustomFieldController;
 use App\Http\Controllers\WorkspaceSettings\InvitationController;
 use App\Http\Controllers\WorkspaceSettings\MemberController;
 use App\Http\Controllers\WorkspaceSwitchController;
@@ -86,6 +87,9 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
             Route::patch('members/{user}', [MemberController::class, 'update'])->name('members.update');
             Route::delete('members/{user}', [MemberController::class, 'destroy'])->name('members.destroy');
             Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+            Route::get('custom-fields', [CustomFieldController::class, 'index'])->name('custom-fields.index');
+            Route::post('custom-fields', [CustomFieldController::class, 'store'])->name('custom-fields.store');
+            Route::delete('custom-fields/{customField}', [CustomFieldController::class, 'destroy'])->name('custom-fields.destroy');
         });
 
     Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');

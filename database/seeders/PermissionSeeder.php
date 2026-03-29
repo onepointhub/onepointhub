@@ -38,6 +38,7 @@ class PermissionSeeder extends Seeder
 
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->givePermissionTo([
+            'manage-workspace',
             'manage-members',
             'manage-roles',
             'create-project',

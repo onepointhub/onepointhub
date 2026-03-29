@@ -74,6 +74,15 @@ class UpdateClientRequest extends FormRequest
                 'string',
                 'max:5000',
             ],
+            'custom_fields' => [
+                'nullable',
+                'array',
+            ],
+            'custom_fields.*' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
         ];
     }
 }
