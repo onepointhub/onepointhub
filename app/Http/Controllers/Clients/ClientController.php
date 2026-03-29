@@ -7,7 +7,9 @@ use App\Enums\ClientType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
+use App\Models\ActivityLog;
 use App\Models\Client;
+use App\Models\ClientContact;
 use App\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -158,11 +160,54 @@ class ClientController extends Controller
     {
         Gate::authorize('view-client');
 
+        $contacts = $client->contacts()
+            ->orderByDesc('is_primary')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (ClientContact $c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'email' => $c->email,
+                'phone' => $c->phone,
+                'role' => $c->role,
+                'is_primary' => $c->is_primary,
+            ]);
+
         return Inertia::render('clients/Show', [
             'client' => [
                 'id' => $client->id,
                 'name' => $client->name,
+                'slug' => $client->slug,
+                'type' => $client->type->value,
+                'status' => $client->status->value,
+                'currency' => $client->currency,
+                'website' => $client->website,
+                'vat_number' => $client->vat_number,
+                'notes' => $client->notes,
+                'created_at' => $client->created_at->toDateString(),
             ],
+            'contacts' => $contacts,
+            'canEdit' => Gate::check('update-client'),
+            'canDelete' => Gate::check('delete-client'),
+            'canManagePortal' => Gate::check('manage-portal'),
+            // Deferred: only loaded when the Activity tab is visited
+            'activity' => Inertia::defer(fn () => ActivityLog::query()
+                ->where('subject_type', Client::class)
+                ->where('subject_id', $client->id)
+                ->with('actor')
+                ->latest()
+                ->limit(50)
+                ->get()
+                ->map(fn (ActivityLog $log) => [
+                    'id' => $log->id,
+                    'event' => $log->event,
+                    'actor' => $log->actor ? [
+                        'name' => $log->actor->name,
+                        'avatar' => $log->actor->avatar,
+                    ] : null,
+                    'created_at' => $log->created_at->toISOString(),
+                ])
+            ),
         ]);
     }
 
