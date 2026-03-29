@@ -165,4 +165,39 @@ class ClientController extends Controller
             ],
         ]);
     }
+
+    public function archive(Client $client): RedirectResponse
+    {
+        Gate::authorize('delete-client');
+
+        $client->update(['status' => ClientStatus::Archived]);
+
+        return redirect()->route('clients.index');
+    }
+
+    public function restore(Client $client): RedirectResponse
+    {
+        Gate::authorize('update-client');
+
+        if ($client->trashed()) {
+            $client->restore();
+        } else {
+            $client->update(['status' => ClientStatus::Active]);
+        }
+
+        return redirect()->route('clients.index');
+    }
+
+    public function destroy(Client $client): RedirectResponse
+    {
+        Gate::authorize('delete-client');
+
+        if ($client->trashed()) {
+            $client->forceDelete();
+        } else {
+            $client->delete();
+        }
+
+        return redirect()->route('clients.index');
+    }
 }
