@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureInternalAccess;
+use App\Http\Middleware\EnsurePortalAccess;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\WorkspaceMiddleware;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -27,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'workspace' => WorkspaceMiddleware::class,
             'internal' => EnsureInternalAccess::class,
+            'portal.access' => EnsurePortalAccess::class,
         ]);
 
         // WorkspaceMiddleware must run before SubstituteBindings so that

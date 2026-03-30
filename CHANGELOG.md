@@ -19,6 +19,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Clients module: archive/restore, soft-delete with 30-day recovery window, and bulk archive from list view (#29)
 - Clients module: add/edit/remove contacts, primary contact designation, and auto-promotion on primary deletion (#24)
 - Clients module: workspace-scoped EAV custom fields (text, number, date, select, checkbox) displayed on client forms and included in CSV export (#26)
+- Clients module: client portal scaffold at `/portal/{workspace-slug}/{client-slug}` with single-use magic link authentication and session-based portal access (#27)
 
 ---
 
