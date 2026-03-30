@@ -2,7 +2,6 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Enums\ClientStatus;
 use App\Modules\Clients\Enums\ClientType;
 use App\Modules\Clients\Http\Controllers\Portal\PortalAuthController;
@@ -12,6 +11,7 @@ use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\ClientContact;
 use App\Modules\Clients\Models\CustomFieldDefinition;
 use App\Modules\Clients\Models\CustomFieldValue;
+use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\ActivityLog;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
@@ -58,7 +58,7 @@ class ClientController extends Controller
                 'created_at' => $client->created_at->toDateString(),
             ]);
 
-        return Inertia::render('clients/Index', [
+        return Inertia::render('Clients::clients/Index', [
             'clients' => $clients,
             'filters' => $request->only(['search', 'status', 'type']),
             'statuses' => array_column(ClientStatus::cases(), 'value'),
@@ -136,7 +136,7 @@ class ClientController extends Controller
     {
         Gate::authorize('create-client');
 
-        return Inertia::render('clients/Create', [
+        return Inertia::render('Clients::clients/Create', [
             'statuses' => array_column(ClientStatus::cases(), 'value'),
             'types' => array_column(ClientType::cases(), 'value'),
             'customFields' => $this->customFieldDefinitions(),
@@ -160,7 +160,7 @@ class ClientController extends Controller
     {
         Gate::authorize('update-client');
 
-        return Inertia::render('clients/Edit', [
+        return Inertia::render('Clients::clients/Edit', [
             'client' => [
                 'id' => $client->id,
                 'name' => $client->name,
@@ -207,7 +207,7 @@ class ClientController extends Controller
                 'is_primary' => $c->is_primary,
             ]);
 
-        return Inertia::render('clients/Show', [
+        return Inertia::render('Clients::clients/Show', [
             'client' => [
                 'id' => $client->id,
                 'name' => $client->name,
@@ -251,7 +251,7 @@ class ClientController extends Controller
     {
         Gate::authorize('delete-client');
 
-        $client->update(['status' => ClientStatus::Archived]);
+        $client->update(['status' => ClientStatus::Archived->value]);
 
         return redirect()->route('clients.index');
     }

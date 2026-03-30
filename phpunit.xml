@@ -14,11 +14,22 @@
         <testsuite name="Integration">
             <directory>tests/Integration</directory>
         </testsuite>
+        <testsuite name="Modules">
+            <directory>app/Modules/*/tests/Feature</directory>
+            <directory>app/Modules/*/tests/Unit</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <directory>app/Modules/*/config</directory>
+            <directory>app/Modules/*/database</directory>
+            <directory>app/Modules/*/resources</directory>
+            <directory>app/Modules/*/routes</directory>
+            <directory>app/Modules/*/tests</directory>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>

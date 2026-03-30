@@ -21,7 +21,7 @@ use Tests\TestCase;
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(fn () => $this->seed(PermissionSeeder::class))
-    ->in('Feature');
+    ->in('Feature', '../app/Modules/*/tests/Feature', '../app/Modules/*/tests/Unit');
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)

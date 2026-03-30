@@ -8,6 +8,7 @@ parameters:
     - app/
   excludePaths:
     - app/Modules/*/database/*
+    - app/Modules/*/tests/*
   databaseMigrationsPath:
     - database/migrations
     - app/Modules/*/database/migrations

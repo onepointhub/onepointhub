@@ -2,8 +2,8 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Jobs\ImportClientsJob;
+use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\User;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +20,7 @@ class ClientImportController extends Controller
     {
         Gate::authorize('create-client');
 
-        return Inertia::render('clients/Import', [
+        return Inertia::render('Clients::clients/Import', [
             'clientFields' => ['name', 'type', 'status', 'currency', 'website', 'vat_number', 'notes'],
         ]);
     }

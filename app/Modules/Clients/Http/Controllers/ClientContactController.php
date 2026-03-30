@@ -2,10 +2,10 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Http\Requests\StoreClientContactRequest;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\ClientContact;
+use App\Modules\Core\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;

@@ -75,4 +75,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 app('sentry')->captureException($e);
             }
         });
-    })->create();
+    })
+    ->withCommands([
+        __DIR__.'/../app/Modules/Core/Console/Commands',
+    ])->create();

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Core\Models\Scopes;
 
-use App\Exceptions\WorkspaceNotResolvedException;
+use App\Modules\Core\Exceptions\WorkspaceNotResolvedException;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

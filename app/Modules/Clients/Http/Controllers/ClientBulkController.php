@@ -2,9 +2,9 @@
 
 namespace App\Modules\Clients\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Enums\ClientStatus;
 use App\Modules\Clients\Models\Client;
+use App\Modules\Core\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;

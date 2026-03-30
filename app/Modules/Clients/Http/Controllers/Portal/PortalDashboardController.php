@@ -2,9 +2,9 @@
 
 namespace App\Modules\Clients\Http\Controllers\Portal;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\ClientContact;
+use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,7 +24,7 @@ class PortalDashboardController extends Controller
 
         $contact = ClientContact::findOrFail($contactId);
 
-        return Inertia::render('portal/Dashboard', [
+        return Inertia::render('Clients::portal/Dashboard', [
             'client' => [
                 'name' => $client->name,
                 'slug' => $client->slug,

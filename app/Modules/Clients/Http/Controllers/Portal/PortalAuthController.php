@@ -2,12 +2,12 @@
 
 namespace App\Modules\Clients\Http\Controllers\Portal;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\PortalToken;
+use App\Modules\Clients\Notifications\PortalMagicLinkNotification;
+use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use App\Modules\Core\Models\Workspace;
-use App\Notifications\PortalMagicLinkNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Gate;

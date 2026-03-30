@@ -1,7 +1,7 @@
 <?php
 
+use App\Modules\Core\Providers\FortifyServiceProvider;
 use App\Providers\AppServiceProvider;
-use App\Providers\FortifyServiceProvider;
 
 return [
     AppServiceProvider::class,
