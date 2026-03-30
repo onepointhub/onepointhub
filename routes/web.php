@@ -6,6 +6,8 @@ use App\Http\Controllers\Clients\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\Portal\PortalAuthController;
+use App\Http\Controllers\Portal\PortalDashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
@@ -116,6 +118,8 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         Route::patch('{client}/restore', [ClientController::class, 'restore'])->name('restore');
         Route::delete('{client}', [ClientController::class, 'destroy'])->name('destroy')->withTrashed();
         Route::post('bulk-archive', [ClientBulkController::class, 'archive'])->name('bulk-archive');
+        Route::post('{client}/portal/send-link', [ClientController::class, 'sendPortalLink'])
+            ->name('portal.send-link');
         Route::prefix('{client}/contacts')
             ->name('contacts.')
             ->group(function () {
@@ -123,4 +127,19 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
                 Route::patch('{contact}', [ClientContactController::class, 'update'])->name('update');
                 Route::delete('{contact}', [ClientContactController::class, 'destroy'])->name('destroy');
             });
+    });
+
+// ---------------------------------------------------------------------------
+// Client Portal routes (no internal/workspace middleware)
+// ---------------------------------------------------------------------------
+Route::prefix('portal/{workspace_slug}/{client_slug}')
+    ->name('portal.')
+    ->group(function () {
+        Route::get('login', [PortalAuthController::class, 'login'])->name('login');
+        Route::get('auth/{token}', [PortalAuthController::class, 'consume'])->name('auth.consume');
+        Route::post('logout', [PortalAuthController::class, 'logout'])->name('auth.logout');
+
+        Route::middleware('portal.access')->group(function () {
+            Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
+        });
     });

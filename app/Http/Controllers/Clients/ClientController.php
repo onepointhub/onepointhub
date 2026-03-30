@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Clients;
 use App\Enums\ClientStatus;
 use App\Enums\ClientType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Portal\PortalAuthController;
 use App\Http\Requests\Clients\StoreClientRequest;
 use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\ActivityLog;
@@ -279,6 +280,11 @@ class ClientController extends Controller
         }
 
         return redirect()->route('clients.index');
+    }
+
+    public function sendPortalLink(Client $client): RedirectResponse
+    {
+        return app(PortalAuthController::class)->sendLink($client);
     }
 
     /**
