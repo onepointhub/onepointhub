@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityLog;
-use App\Models\User;
-use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Models\ActivityLog;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use Inertia\Inertia;
 use Inertia\Response;
 

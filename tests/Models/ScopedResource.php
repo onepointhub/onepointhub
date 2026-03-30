@@ -2,7 +2,7 @@
 
 namespace Tests\Models;
 
-use App\Models\Concerns\BelongsToWorkspace;
+use App\Modules\Core\Models\Concerns\BelongsToWorkspace;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 

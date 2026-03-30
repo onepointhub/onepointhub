@@ -6,3 +6,8 @@ parameters:
   level: 9
   paths:
     - app/
+  excludePaths:
+    - app/Modules/*/database/*
+  databaseMigrationsPath:
+    - database/migrations
+    - app/Modules/*/database/migrations

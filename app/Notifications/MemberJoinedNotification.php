@@ -2,10 +2,10 @@
 
 namespace App\Notifications;
 
-use App\Enums\NotificationType;
-use App\Models\NotificationPreference;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Enums\NotificationType;
+use App\Modules\Core\Models\NotificationPreference;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;

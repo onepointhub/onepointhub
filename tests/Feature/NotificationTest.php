@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\WorkspaceRole;
-use App\Models\User;
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use App\Notifications\MemberJoinedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;

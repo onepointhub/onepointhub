@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Modules\Core\Models\User;
 
 it('renders the confirm password page', function () {
     $this->actingAs(User::factory()->create())

@@ -3,7 +3,7 @@
 use App\Models\Client;
 use App\Models\ClientAddress;
 use App\Models\ClientContact;
-use App\Models\Workspace;
+use App\Modules\Core\Models\Workspace;
 use App\Support\ModuleRegistry;
 
 it('scopes clients to workspace', function () {

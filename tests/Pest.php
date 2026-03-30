@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;

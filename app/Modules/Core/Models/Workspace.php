@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Core\Models;
 
-use Database\Factories\WorkspaceFactory;
+use App\Modules\Core\database\factories\WorkspaceFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 #[Fillable(['name', 'slug', 'plan', 'currency', 'settings'])]
+#[UseFactory(WorkspaceFactory::class)]
 class Workspace extends Model
 {
     /** @use HasFactory<WorkspaceFactory> */

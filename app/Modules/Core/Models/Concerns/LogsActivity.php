@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Concerns;
+namespace App\Modules\Core\Models\Concerns;
 
-use App\Models\ActivityLog;
-use App\Models\Workspace;
+use App\Modules\Core\Models\ActivityLog;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Model;
 
 trait LogsActivity

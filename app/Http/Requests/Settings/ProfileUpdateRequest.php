@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Settings;
 
 use App\Concerns\ProfileValidationRules;
-use App\Models\User;
+use App\Modules\Core\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 

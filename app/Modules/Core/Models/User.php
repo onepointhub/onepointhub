@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Core\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Concerns\HasProfilePhoto;
-use Database\Factories\UserFactory;
+use App\Modules\Core\database\factories\UserFactory;
+use App\Modules\Core\Models\Concerns\HasProfilePhoto;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 #[Fillable(['name', 'email', 'password', 'timezone', 'email_verified_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+#[UseFactory(UserFactory::class)]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

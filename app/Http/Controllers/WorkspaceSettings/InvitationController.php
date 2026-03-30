@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\WorkspaceSettings;
 
-use App\Enums\WorkspaceRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkspaceSettings\InviteMemberRequest;
-use App\Models\User;
-use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use App\Notifications\MemberJoinedNotification;
 use App\Notifications\WorkspaceInvitationNotification;
 use Illuminate\Http\RedirectResponse;

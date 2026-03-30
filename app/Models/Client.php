@@ -4,9 +4,10 @@ namespace App\Models;
 
 use App\Enums\ClientStatus;
 use App\Enums\ClientType;
-use App\Models\Concerns\BelongsToWorkspace;
-use App\Models\Concerns\LogsActivity;
-use App\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Concerns\BelongsToWorkspace;
+use App\Modules\Core\Models\Concerns\LogsActivity;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Workspace;
 use Carbon\CarbonImmutable;
 use Database\Factories\ClientFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;

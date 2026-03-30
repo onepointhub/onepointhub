@@ -2,7 +2,7 @@
 
 use App\Models\Client;
 use App\Models\ClientContact;
-use App\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use Inertia\Testing\AssertableInertia;
 
 it('renders the client detail page', function () {

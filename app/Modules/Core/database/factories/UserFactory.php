@@ -1,15 +1,14 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Modules\Core\database\factories;
 
-use App\Models\User;
+use App\Modules\Core\Models\User;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends Factory<User>
- */
+#[UseModel(User::class)]
 class UserFactory extends Factory
 {
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Client;
 use App\Models\ClientContact;
-use App\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

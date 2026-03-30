@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\WorkspaceSettings;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
-use App\Models\Workspace;
+use App\Modules\Core\Models\ActivityLog;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;

@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Models\Workspace;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;

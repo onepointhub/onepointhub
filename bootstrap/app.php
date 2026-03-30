@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Middleware\EnsureInternalAccess;
 use App\Http\Middleware\EnsurePortalAccess;
-use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\WorkspaceMiddleware;
+use App\Modules\Core\Http\Middleware\EnsureInternalAccess;
+use App\Modules\Core\Http\Middleware\HandleInertiaRequests;
+use App\Modules\Core\Http\Middleware\WorkspaceMiddleware;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;

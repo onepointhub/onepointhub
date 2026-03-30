@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Concerns;
+namespace App\Modules\Core\Models\Concerns;
 
-use App\Models\Scopes\WorkspaceScope;
-use App\Models\Workspace;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

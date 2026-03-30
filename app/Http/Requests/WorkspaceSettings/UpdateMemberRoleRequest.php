@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\WorkspaceSettings;
 
-use App\Enums\WorkspaceRole;
-use App\Models\User;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

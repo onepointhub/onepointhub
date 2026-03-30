@@ -4,8 +4,8 @@ namespace App\Http\Requests\Clients;
 
 use App\Enums\ClientStatus;
 use App\Enums\ClientType;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

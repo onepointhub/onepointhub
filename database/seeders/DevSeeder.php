@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enums\WorkspaceRole;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Seeder;
 
 class DevSeeder extends Seeder

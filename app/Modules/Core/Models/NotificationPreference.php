@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Modules\Core\Models;
 
-use App\Enums\NotificationType;
+use App\Modules\Core\Enums\NotificationType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 

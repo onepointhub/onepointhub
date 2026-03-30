@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Scopes;
+namespace App\Modules\Core\Models\Scopes;
 
 use App\Exceptions\WorkspaceNotResolvedException;
-use App\Models\Workspace;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;

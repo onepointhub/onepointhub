@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\NotificationType;
-use App\Models\NotificationPreference;
-use App\Models\User;
+use App\Modules\Core\Enums\NotificationType;
+use App\Modules\Core\Models\NotificationPreference;
+use App\Modules\Core\Models\User;
 use Inertia\Testing\AssertableInertia;
 
 it('defaults to email enabled when no preference exists', function () {

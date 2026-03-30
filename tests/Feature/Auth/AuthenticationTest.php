@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Modules\Core\Models\User;
 use Laravel\Fortify\Features;
 
 it('renders the login page', function () {

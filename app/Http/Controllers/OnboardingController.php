@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\WorkspaceRole;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\StoreOnboardingInviteRequest;
 use App\Http\Requests\StoreWorkspaceRequest;
-use App\Models\User;
-use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use App\Notifications\WorkspaceInvitationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Notification;

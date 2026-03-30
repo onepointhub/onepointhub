@@ -3,8 +3,8 @@
 use App\Models\Client;
 use App\Models\ClientContact;
 use App\Models\PortalToken;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use App\Notifications\PortalMagicLinkNotification;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Notification;

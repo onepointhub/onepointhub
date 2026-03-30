@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Enums\WorkspaceRole;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Enums\WorkspaceRole;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 

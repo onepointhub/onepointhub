@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\WorkspaceInvitation;
+use App\Modules\Core\Models\WorkspaceInvitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 

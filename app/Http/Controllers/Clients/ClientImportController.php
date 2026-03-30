@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Clients;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ImportClientsJob;
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;

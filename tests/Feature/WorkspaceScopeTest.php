@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Workspace;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Tests\Models\ScopedResource;

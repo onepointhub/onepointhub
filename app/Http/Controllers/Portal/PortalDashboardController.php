@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Portal;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\ClientContact;
-use App\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use Inertia\Inertia;
 use Inertia\Response;
 

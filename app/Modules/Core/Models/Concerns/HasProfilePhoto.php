@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Concerns;
+namespace App\Modules\Core\Models\Concerns;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\UploadedFile;

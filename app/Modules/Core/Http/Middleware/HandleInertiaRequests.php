@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Modules\Core\Http\Middleware;
 
-use App\Models\Workspace;
+use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 

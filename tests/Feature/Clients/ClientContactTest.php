@@ -2,7 +2,7 @@
 
 use App\Models\Client;
 use App\Models\ClientContact;
-use App\Models\Scopes\WorkspaceScope;
+use App\Modules\Core\Models\Scopes\WorkspaceScope;
 
 it('stores a new contact on a client', function () {
     actingAsWorkspaceMember('admin');

@@ -1,13 +1,12 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Modules\Core\database\factories;
 
-use App\Models\Workspace;
+use App\Modules\Core\Models\Workspace;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Workspace>
- */
+#[UseModel(Workspace::class)]
 class WorkspaceFactory extends Factory
 {
     /**
