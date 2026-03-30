@@ -3,6 +3,7 @@
 use App\Http\Controllers\Clients\ClientBulkController;
 use App\Http\Controllers\Clients\ClientContactController;
 use App\Http\Controllers\Clients\ClientController;
+use App\Http\Controllers\Clients\ClientImportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
@@ -111,6 +112,9 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         Route::get('export', [ClientController::class, 'export'])->name('export');
         Route::get('create', [ClientController::class, 'create'])->name('create');
         Route::post('/', [ClientController::class, 'store'])->name('store');
+        Route::get('import', [ClientImportController::class, 'index'])->name('import');
+        Route::post('import/upload', [ClientImportController::class, 'upload'])->name('import.upload');
+        Route::post('import/execute', [ClientImportController::class, 'execute'])->name('import.execute');
         Route::get('{client}/edit', [ClientController::class, 'edit'])->name('edit');
         Route::patch('{client}', [ClientController::class, 'update'])->name('update');
         Route::get('{client}', [ClientController::class, 'show'])->name('show');
