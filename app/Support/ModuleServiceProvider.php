@@ -33,14 +33,19 @@ abstract class ModuleServiceProvider extends ServiceProvider
     }
 
     /**
-     * Autoload this module's migrations if the directory exists.
+     * Autoload this module's migrations and routes if the directories exist.
      */
     public function boot(): void
     {
         $migrations = $this->moduleDirectory().'/database/migrations';
+        $routes = $this->moduleDirectory().'/routes';
 
         if (is_dir($migrations)) {
             $this->loadMigrationsFrom($migrations);
+        }
+
+        if (is_dir($routes)) {
+            $this->loadRoutesFrom($routes.'/web.php');
         }
     }
 
