@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\ClientStatus;
-use App\Enums\ClientType;
-use App\Models\Client;
+use App\Modules\Clients\Enums\ClientStatus;
+use App\Modules\Clients\Enums\ClientType;
+use App\Modules\Clients\Models\Client;
 
 it('renders the create form', function () {
     actingAsWorkspaceMember('admin');

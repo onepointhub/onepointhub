@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Requests\WorkspaceSettings;
+namespace App\Modules\Clients\Http\Requests;
 
-use App\Modules\Clients\Enums\CustomFieldType;
 use App\Modules\Core\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreCustomFieldRequest extends FormRequest
+class StoreClientContactRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,7 +16,7 @@ class StoreCustomFieldRequest extends FormRequest
         /** @var User $user */
         $user = $this->user();
 
-        return $user->can('manage-workspace');
+        return $user->can('update-client');
     }
 
     /**
@@ -29,22 +27,28 @@ class StoreCustomFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'label' => [
+            'name' => [
                 'required',
                 'string',
-                'max:100',
+                'max:255',
             ],
-            'type' => [
-                'required',
-                Rule::enum(CustomFieldType::class),
-            ],
-            'options' => [
+            'email' => [
                 'nullable',
-                'array',
+                'email',
+                'max:255',
             ],
-            'options.*' => [
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+            'role' => [
+                'nullable',
                 'string',
                 'max:100',
+            ],
+            'is_primary' => [
+                'boolean',
             ],
         ];
     }

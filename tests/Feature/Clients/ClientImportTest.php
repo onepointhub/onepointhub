@@ -1,7 +1,7 @@
 <?php
 
-use App\Jobs\ImportClientsJob;
-use App\Models\Client;
+use App\Modules\Clients\Jobs\ImportClientsJob;
+use App\Modules\Clients\Models\Client;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;

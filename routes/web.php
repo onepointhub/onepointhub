@@ -1,14 +1,8 @@
 <?php
 
-use App\Http\Controllers\Clients\ClientBulkController;
-use App\Http\Controllers\Clients\ClientContactController;
-use App\Http\Controllers\Clients\ClientController;
-use App\Http\Controllers\Clients\ClientImportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
-use App\Http\Controllers\Portal\PortalAuthController;
-use App\Http\Controllers\Portal\PortalDashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
@@ -19,6 +13,12 @@ use App\Http\Controllers\WorkspaceSettings\CustomFieldController;
 use App\Http\Controllers\WorkspaceSettings\InvitationController;
 use App\Http\Controllers\WorkspaceSettings\MemberController;
 use App\Http\Controllers\WorkspaceSwitchController;
+use App\Modules\Clients\Http\Controllers\ClientBulkController;
+use App\Modules\Clients\Http\Controllers\ClientContactController;
+use App\Modules\Clients\Http\Controllers\ClientController;
+use App\Modules\Clients\Http\Controllers\ClientImportController;
+use App\Modules\Clients\Http\Controllers\Portal\PortalAuthController;
+use App\Modules\Clients\Http\Controllers\Portal\PortalDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => 'Home page')->name('home');

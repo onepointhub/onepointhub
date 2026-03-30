@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\ClientStatus;
-use App\Models\Client;
+use App\Modules\Clients\Enums\ClientStatus;
+use App\Modules\Clients\Models\Client;
 
 it('archives a client', function () {
     actingAsWorkspaceMember('admin');

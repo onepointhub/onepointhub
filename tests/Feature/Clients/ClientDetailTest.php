@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Client;
-use App\Models\ClientContact;
+use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\ClientContact;
 use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use Inertia\Testing\AssertableInertia;
 

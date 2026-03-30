@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\EnsurePortalAccess;
+use App\Modules\Clients\Http\Middleware\EnsurePortalAccess;
 use App\Modules\Core\Http\Middleware\EnsureInternalAccess;
 use App\Modules\Core\Http\Middleware\HandleInertiaRequests;
 use App\Modules\Core\Http\Middleware\WorkspaceMiddleware;

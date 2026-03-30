@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Client;
-use App\Models\ClientContact;
-use App\Models\PortalToken;
+use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\ClientContact;
+use App\Modules\Clients\Models\PortalToken;
 use App\Modules\Core\Models\User;
 use App\Modules\Core\Models\Workspace;
 use App\Notifications\PortalMagicLinkNotification;

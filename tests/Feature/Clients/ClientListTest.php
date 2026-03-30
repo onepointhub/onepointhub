@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\ClientStatus;
-use App\Models\Client;
-use App\Models\ClientContact;
+use App\Modules\Clients\Enums\ClientStatus;
+use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\ClientContact;
 
 it('requires authentication', function () {
     $this->get(route('clients.index'))->assertRedirect(route('login'));

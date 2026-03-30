@@ -1,9 +1,9 @@
 <?php
 
-use App\Enums\CustomFieldType;
-use App\Models\Client;
-use App\Models\CustomFieldDefinition;
-use App\Models\CustomFieldValue;
+use App\Modules\Clients\Enums\CustomFieldType;
+use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\CustomFieldDefinition;
+use App\Modules\Clients\Models\CustomFieldValue;
 
 it('renders the custom fields settings page', function () {
     actingAsWorkspaceMember('admin');

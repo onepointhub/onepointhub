@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\WorkspaceSettings;
 
-use App\Enums\CustomFieldType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkspaceSettings\StoreCustomFieldRequest;
-use App\Models\CustomFieldDefinition;
+use App\Modules\Clients\Enums\CustomFieldType;
+use App\Modules\Clients\Models\CustomFieldDefinition;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
