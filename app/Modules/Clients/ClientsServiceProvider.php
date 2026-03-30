@@ -18,7 +18,7 @@ class ClientsServiceProvider extends ModuleServiceProvider
 
     public function boot(): void
     {
-        //
+        parent::boot();
     }
 
     public function permissions(): array

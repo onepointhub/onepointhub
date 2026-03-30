@@ -13,5 +13,8 @@ class CoreServiceProvider extends ModuleServiceProvider
 
     public function register(): void {}
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        parent::boot();
+    }
 }

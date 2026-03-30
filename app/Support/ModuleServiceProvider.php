@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Support\ServiceProvider;
+use ReflectionClass;
 
 abstract class ModuleServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,29 @@ abstract class ModuleServiceProvider extends ServiceProvider
     public function navigation(): array
     {
         return [];
+    }
+
+    /**
+     * Autoload this module's migrations if the directory exists.
+     */
+    public function boot(): void
+    {
+        $migrations = $this->moduleDirectory().'/database/migrations';
+
+        if (is_dir($migrations)) {
+            $this->loadMigrationsFrom($migrations);
+        }
+    }
+
+    /**
+     * Returns the absolute path to this module's root directory
+     * (the folder containing the ServiceProvider file).
+     */
+    protected function moduleDirectory(): string
+    {
+        /** @var string $path */
+        $path = (new ReflectionClass($this))->getFileName();
+
+        return dirname($path);
     }
 }
