@@ -1,14 +1,21 @@
 <?php
 
+use App\Http\Controllers\Clients\ClientBulkController;
+use App\Http\Controllers\Clients\ClientContactController;
+use App\Http\Controllers\Clients\ClientController;
+use App\Http\Controllers\Clients\ClientImportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\Portal\PortalAuthController;
+use App\Http\Controllers\Portal\PortalDashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Settings\NotificationPreferenceController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\ProfilePhotoController;
 use App\Http\Controllers\Settings\SecurityController;
 use App\Http\Controllers\WorkspaceSettings\ActivityLogController;
+use App\Http\Controllers\WorkspaceSettings\CustomFieldController;
 use App\Http\Controllers\WorkspaceSettings\InvitationController;
 use App\Http\Controllers\WorkspaceSettings\MemberController;
 use App\Http\Controllers\WorkspaceSwitchController;
@@ -83,6 +90,9 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
             Route::patch('members/{user}', [MemberController::class, 'update'])->name('members.update');
             Route::delete('members/{user}', [MemberController::class, 'destroy'])->name('members.destroy');
             Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+            Route::get('custom-fields', [CustomFieldController::class, 'index'])->name('custom-fields.index');
+            Route::post('custom-fields', [CustomFieldController::class, 'store'])->name('custom-fields.store');
+            Route::delete('custom-fields/{customField}', [CustomFieldController::class, 'destroy'])->name('custom-fields.destroy');
         });
 
     Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
@@ -90,3 +100,50 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
 });
 
 Route::middleware('auth')->get('/invitations/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
+
+// ---------------------------------------------------------------------------
+// Clients routes
+// ---------------------------------------------------------------------------
+Route::middleware(['auth', 'verified', 'workspace', 'internal'])
+    ->prefix('clients')
+    ->name('clients.')
+    ->group(function () {
+        Route::get('/', [ClientController::class, 'index'])->name('index');
+        Route::get('export', [ClientController::class, 'export'])->name('export');
+        Route::get('create', [ClientController::class, 'create'])->name('create');
+        Route::post('/', [ClientController::class, 'store'])->name('store');
+        Route::get('import', [ClientImportController::class, 'index'])->name('import');
+        Route::post('import/upload', [ClientImportController::class, 'upload'])->name('import.upload');
+        Route::post('import/execute', [ClientImportController::class, 'execute'])->name('import.execute');
+        Route::get('{client}/edit', [ClientController::class, 'edit'])->name('edit');
+        Route::patch('{client}', [ClientController::class, 'update'])->name('update');
+        Route::get('{client}', [ClientController::class, 'show'])->name('show');
+        Route::patch('{client}/archive', [ClientController::class, 'archive'])->name('archive');
+        Route::patch('{client}/restore', [ClientController::class, 'restore'])->name('restore');
+        Route::delete('{client}', [ClientController::class, 'destroy'])->name('destroy')->withTrashed();
+        Route::post('bulk-archive', [ClientBulkController::class, 'archive'])->name('bulk-archive');
+        Route::post('{client}/portal/send-link', [ClientController::class, 'sendPortalLink'])
+            ->name('portal.send-link');
+        Route::prefix('{client}/contacts')
+            ->name('contacts.')
+            ->group(function () {
+                Route::post('/', [ClientContactController::class, 'store'])->name('store');
+                Route::patch('{contact}', [ClientContactController::class, 'update'])->name('update');
+                Route::delete('{contact}', [ClientContactController::class, 'destroy'])->name('destroy');
+            });
+    });
+
+// ---------------------------------------------------------------------------
+// Client Portal routes (no internal/workspace middleware)
+// ---------------------------------------------------------------------------
+Route::prefix('portal/{workspace_slug}/{client_slug}')
+    ->name('portal.')
+    ->group(function () {
+        Route::get('login', [PortalAuthController::class, 'login'])->name('login');
+        Route::get('auth/{token}', [PortalAuthController::class, 'consume'])->name('auth.consume');
+        Route::post('logout', [PortalAuthController::class, 'logout'])->name('auth.logout');
+
+        Route::middleware('portal.access')->group(function () {
+            Route::get('/', [PortalDashboardController::class, 'index'])->name('dashboard');
+        });
+    });

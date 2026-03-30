@@ -19,9 +19,11 @@ class PermissionSeeder extends Seeder
         'update-invoice',
         'delete-invoice',
         'send-invoice',
+        'view-client',
         'create-client',
         'update-client',
         'delete-client',
+        'manage-portal',
         'view-activity-log',
     ];
 
@@ -36,6 +38,7 @@ class PermissionSeeder extends Seeder
 
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $admin->givePermissionTo([
+            'manage-workspace',
             'manage-members',
             'manage-roles',
             'create-project',
@@ -44,8 +47,11 @@ class PermissionSeeder extends Seeder
             'create-invoice',
             'update-invoice',
             'send-invoice',
+            'view-client',
             'create-client',
             'update-client',
+            'delete-client',
+            'manage-portal',
             'view-activity-log',
         ]);
 
@@ -53,7 +59,9 @@ class PermissionSeeder extends Seeder
         $member->givePermissionTo([
             'create-project',
             'update-project',
+            'view-client',
             'create-client',
+            'update-client',
         ]);
 
         Role::firstOrCreate(['name' => 'client']);

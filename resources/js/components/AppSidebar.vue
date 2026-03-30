@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import type { NavItem } from '@/types'
 import { LayoutGrid } from 'lucide-vue-next'
-import ModeToggle from '@/components/ModeToggle.vue'
 import NavMain from '@/components/NavMain.vue'
-import NavUser from '@/components/NavUser.vue'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
 } from '@/components/ui/sidebar'
 import WorkspaceSwitcher from '@/components/WorkspaceSwitcher.vue'
@@ -31,12 +28,6 @@ const mainNavItems: NavItem[] = [
     <SidebarContent>
       <NavMain :items="mainNavItems" />
     </SidebarContent>
-
-    <ModeToggle />
-
-    <SidebarFooter>
-      <NavUser />
-    </SidebarFooter>
   </Sidebar>
   <slot />
 </template>

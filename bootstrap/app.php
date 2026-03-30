@@ -1,12 +1,20 @@
 <?php
 
 use App\Http\Middleware\EnsureInternalAccess;
+use App\Http\Middleware\EnsurePortalAccess;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\WorkspaceMiddleware;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +28,22 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'workspace' => WorkspaceMiddleware::class,
             'internal' => EnsureInternalAccess::class,
+            'portal.access' => EnsurePortalAccess::class,
+        ]);
+
+        // WorkspaceMiddleware must run before SubstituteBindings so that
+        // workspace-scoped route model bindings (e.g. {client}) can resolve
+        // correctly — WorkspaceScope reads the workspace from the container,
+        // which WorkspaceMiddleware populates.
+        $middleware->priority([
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            ShareErrorsFromSession::class,
+            PreventRequestForgery::class,
+            Authenticate::class,
+            WorkspaceMiddleware::class,
+            SubstituteBindings::class,
         ]);
 
         $middleware->encryptCookies(except: ['sidebar_state']);

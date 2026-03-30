@@ -12,6 +12,24 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ## [Unreleased]
 
+---
+
+## [0.3.0] - 2026-03-30
+
+### Added
+- Clients module: `clients`, `client_contacts`, `client_addresses` tables with models, enums, factories, and `ClientsServiceProvider` (#21)
+- Clients module: paginated client list with status/type filters, name and email search, and CSV export (#22)
+- Clients module: create and edit forms with server-side validation, inline errors, and localStorage draft persistence (#23)
+- Clients module: archive/restore, soft-delete with 30-day recovery window, and bulk archive from list view (#29)
+- Clients module: add/edit/remove contacts, primary contact designation, and auto-promotion on primary deletion (#24)
+- Clients module: workspace-scoped EAV custom fields (text, number, date, select, checkbox) displayed on client forms and included in CSV export (#26)
+- Clients module: client portal scaffold at `/portal/{workspace-slug}/{client-slug}` with single-use magic link authentication and session-based portal access (#27)
+- Clients module: CSV import with column mapping, 5-row preview, duplicate handling (skip/update/create), queued processing, and completion notification (#28)
+
+---
+
+## [0.2.0] - 2026-03-27
+
 ### Added
 - Module service provider contract (`ModuleServiceProvider`) and registry (`ModuleRegistry`) with auto-discovery from `app/Modules/`
 - `CoreServiceProvider` stub proving the module contract
