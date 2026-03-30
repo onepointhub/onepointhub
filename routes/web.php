@@ -94,5 +94,3 @@ Route::middleware(['auth', 'verified', 'workspace', 'internal'])->group(function
 });
 
 Route::middleware('auth')->get('/invitations/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
-
-
