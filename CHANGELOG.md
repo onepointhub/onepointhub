@@ -12,6 +12,10 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ## [Unreleased]
 
+---
+
+## [0.3.0] - 2026-03-30
+
 ### Added
 - Clients module: `clients`, `client_contacts`, `client_addresses` tables with models, enums, factories, and `ClientsServiceProvider` (#21)
 - Clients module: paginated client list with status/type filters, name and email search, and CSV export (#22)
