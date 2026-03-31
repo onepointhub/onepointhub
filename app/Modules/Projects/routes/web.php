@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Projects\Http\Controllers\ProjectController;
+use App\Modules\Projects\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------------------------------------------------------
@@ -18,5 +19,13 @@ Route::middleware('web')->group(function () {
             Route::get('/{project}/edit', [ProjectController::class, 'edit'])->name('edit');
             Route::patch('/{project}', [ProjectController::class, 'update'])->name('update');
             Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('destroy');
+
+            Route::prefix('{project}/tasks')
+                ->name('tasks.')
+                ->group(function () {
+                    Route::post('/', [TaskController::class, 'store'])->name('store');
+                    Route::patch('{task}', [TaskController::class, 'update'])->name('update');
+                    Route::delete('{task}', [TaskController::class, 'destroy'])->name('destroy');
+                });
         });
 });

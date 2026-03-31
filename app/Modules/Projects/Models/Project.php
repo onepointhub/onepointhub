@@ -83,8 +83,11 @@ class Project extends Model
         return $this->hasMany(Milestone::class)->orderBy('due_at');
     }
 
-    //    public function tasks(): HasMany
-    //    {
-    //        return $this->hasMany(Task::class);
-    //    }
+    /**
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
 }

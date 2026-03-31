@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property CarbonImmutable|null $due_at
@@ -41,10 +42,13 @@ class Milestone extends Model
         return $this->belongsTo(Project::class);
     }
 
-    //    public function tasks(): HasMany
-    //    {
-    //        return $this->hasMany(Task::class);
-    //    }
+    /**
+     * @return HasMany<Task, $this>
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
 
     public function isOverdue(): bool
     {
