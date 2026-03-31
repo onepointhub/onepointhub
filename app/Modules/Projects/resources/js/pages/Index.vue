@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AppLayout from '@/layouts/AppLayout.vue'
-import { index } from '@/routes/projects'
+import { create, index, show } from '@/routes/projects'
 
 interface Member {
   id: number
@@ -102,7 +102,7 @@ function applyFilters(extra: Record<string, string | undefined> = {}) {
               <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="all">
                 All statuses
               </SelectItem>
               <SelectItem value="active">
@@ -125,7 +125,7 @@ function applyFilters(extra: Record<string, string | undefined> = {}) {
           <Button variant="outline" size="sm" @click="view = view === 'grid' ? 'table' : 'grid'">
             {{ view === 'grid' ? 'Table view' : 'Card view' }}
           </Button>
-          <Link v-if="canCreate" href="#create()#">
+          <Link v-if="canCreate" :href="create()">
             <Button size="sm">
               New Project
             </Button>
@@ -144,7 +144,7 @@ function applyFilters(extra: Record<string, string | undefined> = {}) {
         <p class="mt-1">
           Create your first project to get started.
         </p>
-        <Link v-if="canCreate" href="#create()#" class="mt-4 inline-block">
+        <Link v-if="canCreate" :href="create()" class="mt-4 inline-block">
           <Button size="sm">
             New Project
           </Button>
@@ -156,7 +156,7 @@ function applyFilters(extra: Record<string, string | undefined> = {}) {
         <Link
           v-for="project in projects.data"
           :key="project.id"
-          href="#show({ project: project.id })#"
+          :href="show({ project: project.id })"
         >
           <Card class="hover:shadow-md transition-shadow cursor-pointer h-full">
             <CardHeader class="pb-2">
@@ -230,7 +230,7 @@ function applyFilters(extra: Record<string, string | undefined> = {}) {
               class="border-b last:border-0 hover:bg-muted/50"
             >
               <td class="p-3">
-                <Link href="#show({ project: project.id })#" class="font-medium hover:underline">
+                <Link :href="show({ project: project.id })" class="font-medium hover:underline">
                   {{ project.name }}
                 </Link>
               </td>

@@ -2,19 +2,27 @@
 
 namespace App\Modules\Projects\Http\Controllers;
 
+use App\Modules\Clients\Models\Client;
 use App\Modules\Core\Http\Controllers\Controller;
+use App\Modules\Core\Models\User;
+use App\Modules\Projects\Http\Requests\StoreProjectRequest;
+use App\Modules\Projects\Http\Requests\UpdateProjectRequest;
 use App\Modules\Projects\Models\Project;
+use App\Modules\Projects\Models\ProjectMember;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Throwable;
 
 class ProjectController extends Controller
 {
     public function index(Request $request): InertiaResponse
     {
         $query = Project::query()
-            ->with(['client:id,name', 'members.user:id,name,avatar'])
+            ->with(['client:id,name', 'members.user:id,name,profile_photo_path'])
             //            ->withCount(['tasks', 'tasks as completed_tasks_count' => fn ($q) => $q->whereNotNull('completed_at')])
             ->when($request->search, fn ($q) => $q->where('name', 'like', "%{$request->string('search')}%"))
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
@@ -47,11 +55,121 @@ class ProjectController extends Controller
                 'members' => $project->members->map(fn ($m) => [
                     'id' => $m->user?->id,
                     'name' => $m->user?->name,
-                    'avatar' => $m->user?->avatar,
+                    'avatar' => $m->user?->profile_photo_path,
                 ]),
             ]),
             'filters' => $request->only(['search', 'status', 'client_id', 'member_id', 'sort', 'direction']),
             'canCreate' => Gate::check('create-project'),
         ]);
+    }
+
+    public function create(): InertiaResponse
+    {
+        Gate::authorize('create-project');
+
+        return Inertia::render('Projects::Create', [
+            'clients' => Client::orderBy('name')->get(['id', 'name']),
+            'users' => User::orderBy('name')->get(['id', 'name', 'profile_photo_path']),
+        ]);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function store(StoreProjectRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        /** @var array<string, mixed> $members */
+        $members = $data['members'] ?? [];
+        unset($data['members']);
+
+        $project = DB::transaction(function () use ($data, $members) {
+            $project = Project::create($data);
+
+            /** @var array<string, mixed> $member */
+            foreach ($members as $member) {
+                $project->members()->create($member);
+            }
+
+            return $project;
+        });
+
+        return redirect()->route('projects.show', $project);
+    }
+
+    public function edit(Project $project): InertiaResponse
+    {
+        Gate::authorize('update-project');
+
+        return Inertia::render('Projects::Edit', [
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+                'description' => $project->description,
+                'client_id' => $project->client_id,
+                'status' => $project->status->value,
+                'type' => $project->type->value,
+                'budget' => $project->budget,
+                'budget_type' => $project->budget_type?->value,
+                'colour' => $project->colour,
+                'starts_at' => $project->starts_at?->toDateTimeString(),
+                'ends_at' => $project->ends_at?->toDateTimeString(),
+                'members' => $project->members()->with('user:id,name,profile_photo_path')
+                    ->get()
+                    ->map(fn (ProjectMember $m) => [
+                        'user_id' => $m->user_id,
+                        'role' => $m->role,
+                        'hourly_rate' => $m->hourly_rate,
+                        'user' => ['id' => $m->user_id, 'name' => $m->user?->name, 'avatar' => $m->user?->profile_photo_path],
+                    ]),
+            ],
+            'clients' => Client::orderBy('name')->get(['id', 'name']),
+            'users' => User::orderBy('name')->get(['id', 'name', 'profile_photo_path']),
+        ]);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function update(UpdateProjectRequest $request, Project $project): RedirectResponse
+    {
+        $data = $request->validated();
+        /** @var array<string, mixed> $members */
+        $members = $data['members'] ?? [];
+        unset($data['members']);
+
+        DB::transaction(function () use ($project, $data, $members) {
+            $project->update($data);
+
+            $project->members()->delete();
+
+            /** @var array<string, mixed> $member */
+            foreach ($members as $member) {
+                $project->members()->create($member);
+            }
+        });
+
+        return redirect()->route('projects.show', $project);
+    }
+
+    public function show(Project $project): InertiaResponse
+    {
+        //        Gate::authorize('view-project');
+
+        return Inertia::render('Projects::Show', [
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+            ],
+        ]);
+    }
+
+    public function destroy(Project $project): RedirectResponse
+    {
+        Gate::authorize('delete-project');
+
+        $project->delete();
+
+        return redirect()->route('projects.index');
     }
 }
