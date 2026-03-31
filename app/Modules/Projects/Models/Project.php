@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property BudgetType|null $budget_type
  * @property CarbonImmutable|null $starts_at
  * @property CarbonImmutable|null $ends_at
+ * @property ?int $completed_tasks_count
  */
 #[Fillable([
     'client_id',

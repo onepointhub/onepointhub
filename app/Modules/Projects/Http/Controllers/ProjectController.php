@@ -5,10 +5,12 @@ namespace App\Modules\Projects\Http\Controllers;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\User;
+use App\Modules\Projects\Enums\TaskStatus;
 use App\Modules\Projects\Http\Requests\StoreProjectRequest;
 use App\Modules\Projects\Http\Requests\UpdateProjectRequest;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectMember;
+use App\Modules\Projects\Models\Task;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +25,7 @@ class ProjectController extends Controller
     {
         $query = Project::query()
             ->with(['client:id,name', 'members.user:id,name,profile_photo_path'])
-            //            ->withCount(['tasks', 'tasks as completed_tasks_count' => fn ($q) => $q->whereNotNull('completed_at')])
+            ->withCount(['tasks', 'tasks as completed_tasks_count' => fn ($q) => $q->whereNotNull('completed_at')])
             ->when($request->search, fn ($q) => $q->where('name', 'like', "%{$request->string('search')}%"))
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->when($request->client_id, fn ($q) => $q->where('client_id', $request->client_id))
@@ -50,8 +52,8 @@ class ProjectController extends Controller
                     'id' => $project->client->id,
                     'name' => $project->client->name,
                 ] : null,
-                //                'tasks_count' => $project->tasks_count,
-                //                'completed_tasks_count' => $project->completed_tasks_count,
+                'tasks_count' => $project->tasks_count,
+                'completed_tasks_count' => $project->completed_tasks_count,
                 'members' => $project->members->map(fn ($m) => [
                     'id' => $m->user?->id,
                     'name' => $m->user?->name,
@@ -171,5 +173,50 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('projects.index');
+    }
+
+    public function board(Project $project): InertiaResponse
+    {
+        //        Gate::authorize('view-project');
+
+        $tasks = $project->tasks()
+            ->whereNull('parent_id')
+            ->with(['assignee:id,name,profile_photo_path', 'labels:id,name,colour'])
+            ->withCount('subTasks')
+            ->orderBy('position')
+            ->get();
+
+        $columns = collect(TaskStatus::cases())->mapWithKeys(fn (TaskStatus $status) => [
+            $status->value => $tasks
+                ->where('status', $status)
+                ->map(fn (Task $task) => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'status' => $task->status->value,
+                    'priority' => $task->priority->value,
+                    'position' => $task->position,
+                    'due_at' => $task->due_at?->toDateTimeString(),
+                    'sub_tasks_count' => $task->sub_tasks_count,
+                    'assignee' => $task->assignee ? [
+                        'id' => $task->assignee->id,
+                        'name' => $task->assignee->name,
+                        'avatar' => $task->assignee->profile_photo_path,
+                    ] : null,
+                    'labels' => $task->labels->map(fn ($label) => [
+                        'id' => $label->id,
+                        'name' => $label->name,
+                        'colour' => $label->colour,
+                    ]),
+                ])->values(),
+        ]);
+
+        return Inertia::render('Projects::Board', [
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+            ],
+            'columns' => $columns,
+            'canEdit' => Gate::check('update-project'),
+        ]);
     }
 }
