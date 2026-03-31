@@ -11,6 +11,7 @@ breaking changes between any two versions — see upgrade notes per version.
 ---
 
 ## [Unreleased]
+- Projects module: database schema for projects, project_members, and milestones with models, enums, and factories (#30)
 
 ---
 
