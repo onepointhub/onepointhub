@@ -9,6 +9,7 @@ use App\Modules\Projects\database\factories\ProjectFactory;
 use App\Modules\Projects\Enums\BudgetType;
 use App\Modules\Projects\Enums\ProjectStatus;
 use App\Modules\Projects\Enums\ProjectType;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property ProjectType $type
+ * @property ProjectStatus $status
+ * @property BudgetType|null $budget_type
+ * @property CarbonImmutable|null $starts_at
+ * @property CarbonImmutable|null $ends_at
+ */
 #[Fillable([
     'client_id',
     'name',

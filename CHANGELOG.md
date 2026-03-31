@@ -13,6 +13,7 @@ breaking changes between any two versions — see upgrade notes per version.
 ## [Unreleased]
 - Projects module: database schema for projects, project_members, and milestones with models, enums, and factories (#30)
 - Projects module: paginated project list with card/table toggle, status/client filters, and task progress bars (#31)
+- Projects module: create and edit project forms with client select, budget, date range, colour picker, and team member management (#32)
 
 ---
 
