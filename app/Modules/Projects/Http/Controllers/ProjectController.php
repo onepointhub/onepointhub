@@ -219,4 +219,54 @@ class ProjectController extends Controller
             'canEdit' => Gate::check('update-project'),
         ]);
     }
+
+    public function tasks(Request $request, Project $project): InertiaResponse
+    {
+        //        Gate::authorize('view-project');
+
+        $tasks = $project->tasks()
+            ->whereNull('parent_id')
+            ->with(['assignee:id,name,profile_photo_path', 'labels:id,name,colour', 'milestone:id,name'])
+            ->withCount('subTasks')
+            ->when($request->status, fn ($q) => $q->where('status', $request->status))
+            ->when($request->priority, fn ($q) => $q->where('priority', $request->priority))
+            ->when($request->assignee_id, fn ($q) => $q->where('assignee_id', $request->assignee_id))
+            ->when($request->due_before, fn ($q) => $q->where('due_at', '<=', $request->due_before))
+            ->orderBy('position')
+            ->get()
+            ->map(fn (Task $task) => [
+                'id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status->value,
+                'priority' => $task->priority->value,
+                'due_at' => $task->due_at?->toDateTimeString(),
+                'completed_at' => $task->completed_at?->toDateTimeString(),
+                'sub_tasks_count' => $task->sub_tasks_count,
+                'milestone' => $task->milestone ? [
+                    'id' => $task->milestone->id,
+                    'name' => $task->milestone->name,
+                ] : null,
+                'assignee' => $task->assignee ? [
+                    'id' => $task->assignee->id,
+                    'name' => $task->assignee->name,
+                    'avatar' => $task->assignee->profile_photo_path,
+                ] : null,
+                'labels' => $task->labels->map(fn ($label) => [
+                    'id' => $label->id,
+                    'name' => $label->name,
+                    'colour' => $label->colour,
+                ]),
+            ]);
+
+        return Inertia::render('Projects::Tasks', [
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+            ],
+            'tasks' => $tasks,
+            'filters' => $request->only(['status', 'priority', 'assignee_id', 'due_before']),
+            'canEdit' => Gate::check('update-project'),
+            'canDelete' => Gate::check('delete-task'),
+        ]);
+    }
 }

@@ -2,6 +2,7 @@
 
 use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
+use App\Modules\Projects\Http\Controllers\TaskBulkController;
 use App\Modules\Projects\Http\Controllers\TaskController;
 use App\Modules\Projects\Http\Controllers\TaskMoveController;
 use Illuminate\Support\Facades\Route;
@@ -41,5 +42,8 @@ Route::middleware('web')->group(function () {
 
             Route::get('/{project}/board', [ProjectController::class, 'board'])->name('board');
             Route::patch('/{project}/tasks/{task}/move', TaskMoveController::class)->name('tasks.move');
+
+            Route::get('/{project}/tasks', [ProjectController::class, 'tasks'])->name('tasks');
+            Route::post('/{project}/tasks/bulk', TaskBulkController::class)->name('tasks.bulk');
         });
 });
