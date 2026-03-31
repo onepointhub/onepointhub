@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property TaskStatus $status
  * @property TaskPriority $priority
  * @property ?CarbonImmutable $due_at
+ * @property ?CarbonImmutable $completed_at
  */
 #[Fillable([
     'project_id',
