@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
 use App\Modules\Projects\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,15 @@ Route::middleware('web')->group(function () {
                     Route::post('/', [TaskController::class, 'store'])->name('store');
                     Route::patch('{task}', [TaskController::class, 'update'])->name('update');
                     Route::delete('{task}', [TaskController::class, 'destroy'])->name('destroy');
+                });
+
+            Route::prefix('{project}/milestones')
+                ->name('milestones.')
+                ->group(function () {
+                    Route::post('/', [MilestoneController::class, 'store'])->name('store');
+                    Route::patch('{milestone}', [MilestoneController::class, 'update'])->name('update');
+                    Route::delete('{milestone}', [MilestoneController::class, 'destroy'])->name('destroy');
+                    Route::patch('{milestone}/complete', [MilestoneController::class, 'complete'])->name('complete');
                 });
         });
 });
