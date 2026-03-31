@@ -8,6 +8,7 @@ use App\Modules\Core\Models\User;
 use App\Modules\Projects\database\factories\TaskFactory;
 use App\Modules\Projects\Enums\TaskPriority;
 use App\Modules\Projects\Enums\TaskStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property TaskStatus $status
+ * @property TaskPriority $priority
+ * @property ?CarbonImmutable $due_at
+ */
 #[Fillable([
     'project_id',
     'milestone_id',

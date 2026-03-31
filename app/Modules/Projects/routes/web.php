@@ -3,6 +3,7 @@
 use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
 use App\Modules\Projects\Http\Controllers\TaskController;
+use App\Modules\Projects\Http\Controllers\TaskMoveController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------------------------------------------------------
@@ -37,5 +38,8 @@ Route::middleware('web')->group(function () {
                     Route::delete('{milestone}', [MilestoneController::class, 'destroy'])->name('destroy');
                     Route::patch('{milestone}/complete', [MilestoneController::class, 'complete'])->name('complete');
                 });
+
+            Route::get('/{project}/board', [ProjectController::class, 'board'])->name('board');
+            Route::patch('/{project}/tasks/{task}/move', TaskMoveController::class)->name('tasks.move');
         });
 });
