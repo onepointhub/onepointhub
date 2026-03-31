@@ -4,10 +4,10 @@ import { Head } from '@inertiajs/vue3'
 import axios from 'axios'
 import Sortable from 'sortablejs'
 import { onMounted, onUnmounted, ref } from 'vue'
-import KanbanCard from '@/components/projects/KanbanCard.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import { index, show } from '@/routes/projects'
 import { move } from '@/routes/projects/tasks'
+import KanbanCard from '../components/KanbanCard.vue'
 
 interface Label { id: number, name: string, colour: string }
 
