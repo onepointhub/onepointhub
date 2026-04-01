@@ -3,6 +3,7 @@
 namespace App\Modules\Core\Http\Middleware;
 
 use App\Modules\Core\Models\Workspace;
+use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -39,6 +40,18 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'navigation' => function (): array {
+                /** @var array<array{label: string, route: string, icon?: string}> $items */
+                $items = [];
+
+                foreach (app(ModuleRegistry::class)->all() as $module) {
+                    foreach ($module->navigation() as $item) {
+                        $items[] = $item;
+                    }
+                }
+
+                return $items;
+            },
             'auth' => [
                 'user' => $request->user(),
             ],

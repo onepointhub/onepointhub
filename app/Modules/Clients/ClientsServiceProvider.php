@@ -36,8 +36,8 @@ class ClientsServiceProvider extends ModuleServiceProvider
     {
         return [
             [
-                'label' => 'Clients',
-                'route' => 'clients.index',
+                'title' => 'Clients',
+                'href' => route('clients.index'),
                 'icon' => 'users',
             ],
         ];
