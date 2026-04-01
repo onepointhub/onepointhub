@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 // Clients routes
 // ---------------------------------------------------------------------------
 Route::middleware('web')->group(function () {
-    Route::middleware(['auth', 'workspace', 'internal'])
+    Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         ->prefix('clients')
         ->name('clients.')
         ->group(function () {

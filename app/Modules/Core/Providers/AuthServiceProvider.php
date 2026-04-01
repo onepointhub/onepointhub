@@ -37,7 +37,6 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-members', fn (User $user) => $user->hasPermissionTo('manage-members'));
-
         Gate::define('manage-workspace', fn (User $user) => $user->hasPermissionTo('manage-workspace'));
 
         Gate::define('access-internal', function (User $user) {
@@ -53,5 +52,12 @@ class AuthServiceProvider extends ServiceProvider
                 WorkspaceRole::internal()
             );
         });
+
+        Gate::define('view-project', fn (User $user) => $user->hasPermissionTo('view-project'));
+        Gate::define('create-project', fn (User $user) => $user->hasPermissionTo('create-project'));
+        Gate::define('update-project', fn (User $user) => $user->hasPermissionTo('update-project'));
+        Gate::define('delete-project', fn (User $user) => $user->hasPermissionTo('delete-project'));
+        Gate::define('delete-task', fn (User $user) => $user->hasPermissionTo('delete-task'));
+        Gate::define('view-activity-log', fn (User $user) => $user->hasPermissionTo('view-activity-log'));
     }
 }

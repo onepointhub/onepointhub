@@ -30,17 +30,18 @@ it('sends an invitation email to a new member', function () {
 
 it('accepts a valid invitation and attaches the user to the workspace', function () {
     $workspace = Workspace::factory()->create();
+    $plain = Str::random(64);
     $invitation = WorkspaceInvitation::create([
         'workspace_id' => $workspace->id,
         'email' => 'invitee@example.com',
         'role' => 'member',
-        'token' => Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHours(48),
     ]);
 
     $user = User::factory()->create(['email' => 'invitee@example.com']);
 
-    $this->actingAs($user)->get(route('invitations.accept', ['token' => $invitation->token]))
+    $this->actingAs($user)->get(route('invitations.accept', ['token' => $plain]))
         ->assertRedirect(route('dashboard'));
 
     expect($user->workspaces()->where('workspaces.id', $workspace->id)->exists())->toBeTrue()
@@ -49,17 +50,18 @@ it('accepts a valid invitation and attaches the user to the workspace', function
 
 it('rejects an expired invitation', function () {
     $workspace = Workspace::factory()->create();
+    $plain = Str::random(64);
     $invitation = WorkspaceInvitation::create([
         'workspace_id' => $workspace->id,
         'email' => 'invitee@example.com',
         'role' => 'member',
-        'token' => Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->subHour(),
     ]);
 
     $user = User::factory()->create(['email' => 'invitee@example.com']);
 
-    $this->actingAs($user)->get(route('invitations.accept', ['token' => $invitation->token]))
+    $this->actingAs($user)->get(route('invitations.accept', ['token' => $plain]))
         ->assertForbidden();
 });
 
@@ -83,17 +85,18 @@ it('redirects to dashboard without updating when revisiting an already-accepted 
 
     $originalAcceptedAt = now()->subMinutes(30);
 
+    $plain = Str::random(64);
     $invitation = WorkspaceInvitation::create([
         'workspace_id' => $workspace->id,
         'email' => 'accepted@example.com',
         'role' => 'member',
-        'token' => Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHours(48),
         'accepted_at' => $originalAcceptedAt,
     ]);
 
     $this->actingAs($user)
-        ->get(route('invitations.accept', ['token' => $invitation->token]))
+        ->get(route('invitations.accept', ['token' => $plain]))
         ->assertRedirect(route('dashboard'));
 
     // accepted_at was NOT updated by the re-visit

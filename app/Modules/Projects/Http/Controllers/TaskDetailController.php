@@ -17,14 +17,14 @@ class TaskDetailController extends Controller
         abort_unless($task->project_id === $project->id, 404);
 
         $task->load([
-            'assignee:id,name,profile_photo_url',
+            'assignee:id,name,profile_photo_path',
             'labels:id,name,colour',
             'milestone:id,name',
             'creator:id,name',
         ]);
 
         $subTasks = $task->subTasks()
-            ->with('assignee:id,name,profile_photo_url')
+            ->with('assignee:id,name,profile_photo_path')
             ->orderBy('position')
             ->get()
             ->map(fn (Task $sub) => [
@@ -75,7 +75,7 @@ class TaskDetailController extends Controller
             'canEdit' => Gate::check('update-project'),
             // Deferred: only loaded when panel is open
             'comments' => Inertia::defer(fn () => $task->comments()
-                ->with('user:id,name,profile_photo_url')
+                ->with('user:id,name,profile_photo_path')
                 ->latest()
                 ->get()
                 ->map(fn ($comment) => [
@@ -92,7 +92,7 @@ class TaskDetailController extends Controller
             'activity' => Inertia::defer(fn () => ActivityLog::query()
                 ->where('subject_type', Task::class)
                 ->where('subject_id', $task->id)
-                ->with('actor:id,name,profile_photo_url')
+                ->with('actor:id,name,profile_photo_path')
                 ->latest()
                 ->limit(30)
                 ->get()

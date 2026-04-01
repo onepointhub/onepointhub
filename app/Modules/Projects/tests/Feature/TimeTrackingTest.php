@@ -63,7 +63,7 @@ it('renders the time log page', function () {
 
     $this->get(route('projects.timelog', $project))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('projects/TimeLog'));
+        ->assertInertia(fn ($page) => $page->component('Projects::TimeLog'));
 });
 
 it('cannot delete invoiced time entries', function () {

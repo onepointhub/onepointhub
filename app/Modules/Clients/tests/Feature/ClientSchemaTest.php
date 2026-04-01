@@ -78,5 +78,5 @@ it('creates client addresses belonging to the client', function () {
 });
 
 it('registers the clients module on boot', function () {
-    expect(app(ModuleRegistry::class)->has('clients'))->toBeTrue();
+    expect(app(ModuleRegistry::class)->has('Clients'))->toBeTrue();
 });

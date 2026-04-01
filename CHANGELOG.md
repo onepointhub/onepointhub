@@ -11,6 +11,9 @@ breaking changes between any two versions — see upgrade notes per version.
 ---
 
 ## [Unreleased]
+
+### Added
+
 - Projects module: database schema for projects, project_members, and milestones with models, enums, and factories (#30)
 - Projects module: paginated project list with card/table toggle, status/client filters, and task progress bars (#31)
 - Projects module: create and edit project forms with client select, budget, date range, colour picker, and team member management (#32)
@@ -22,6 +25,31 @@ breaking changes between any two versions — see upgrade notes per version.
 - Projects module: time tracking with live timer (localStorage persistence), manual time entry, billable/non-billable split, and invoiced-entry locking (#38)
 - Projects module: project templates with save-as-template, create-from-template, and 3 built-in templates (Web Design, Software Sprint, Monthly Retainer) (#41)
 - Projects module: Gantt/timeline view with milestone diamonds, task bars, week/month/quarter zoom levels, and PNG export (#40)
+
+### Changed
+
+- fix: bulk-assign tasks now correctly writes to `assigned_to` column; assignee filter on task list now works
+- fix: user avatars now correctly loaded on task detail and time log pages
+- fix: project templates index page was unreachable due to route ordering conflict with `/{project}` wildcard
+- security: re-enabled project authorization — `view-project` gate now enforced on show, board, task list, gantt, and time log endpoints
+- security: added explicit `Gate::define` calls for all project and task gates
+- security: added `view-project` and `delete-task` permissions to Projects module
+- fix: admins can now access the Activity Log — `view-activity-log` gate is now defined and seeded
+- security: workspace invitation tokens are now stored as SHA-256 hashes; plain token is only ever in the invitation email URL
+- security: portal magic link tokens are now stored as SHA-256 hashes; plain token only ever appears in the email URL
+- fix: invitation `accepted_at` timestamp is now updated inside the database transaction to prevent re-use on server crash
+- security: added `verified` middleware to Clients and Projects route groups to enforce email verification
+- security: `from-template` now validates that the template belongs to the current workspace (or is a built-in template)
+- fix: portal dashboard now validates URL client slug matches the authenticated portal session to prevent navigation confusion
+- security: import file path is now validated to prevent directory traversal outside the `imports/` directory
+- perf: client CSV export now pre-loads all custom field values in a single query instead of one per client
+- fix: client CSV export filename now correctly includes `.csv` extension
+- fix: timer start now uses a database transaction with row locking to prevent duplicate running timers under concurrent requests
+- refactor: extracted shared project validation rules into `ProjectRequestRules` trait to eliminate duplication between `StoreProjectRequest` and `UpdateProjectRequest`
+- refactor: standardised Inertia component path in `TimeLogController` to use `Projects::TimeLog` module prefix
+- fix: renamed `$warPrimary` variable to `$wasPrimary` in `ClientContactController`
+- fix: standardised `ClientsServiceProvider::moduleName()` to return `'Clients'` (title-case)
+- fix: home route now redirects to the dashboard instead of returning a plain text string
 
 ---
 

@@ -7,10 +7,15 @@ use App\Modules\Core\Models\User;
 use App\Modules\Projects\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Throwable;
 
 class TimerController extends Controller
 {
+    /**
+     * @throws Throwable
+     */
     public function start(Request $request, Project $project): JsonResponse
     {
         Gate::authorize('update-project');
@@ -18,20 +23,23 @@ class TimerController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        // Stop any existing running timer for this user
-        $project->timeEntries()
-            ->where('user_id', $user->id)
-            ->whereNull('ended_at')
-            ->each(fn ($e) => $e->update([
-                'ended_at' => now(),
-                'duration_minutes' => (int) ($e->started_at->diffInMinutes(now())),
-            ]));
+        $entry = DB::transaction(function () use ($project, $user) {
+            // Lock running entries for this user to prevent race conditions
+            $project->timeEntries()
+                ->where('user_id', $user->id)
+                ->whereNull('ended_at')
+                ->lockForUpdate()
+                ->each(fn ($e) => $e->update([
+                    'ended_at' => now(),
+                    'duration_minutes' => (int) ($e->started_at->diffInMinutes(now())),
+                ]));
 
-        $entry = $project->timeEntries()->create([
-            'user_id' => $user->id,
-            'started_at' => now(),
-            'billable' => true,
-        ]);
+            return $project->timeEntries()->create([
+                'user_id' => $user->id,
+                'started_at' => now(),
+                'billable' => true,
+            ]);
+        });
 
         return response()->json(['entry_id' => $entry->id, 'started_at' => $entry->started_at]);
     }

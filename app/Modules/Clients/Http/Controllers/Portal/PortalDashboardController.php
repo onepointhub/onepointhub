@@ -22,6 +22,8 @@ class PortalDashboardController extends Controller
         $client = Client::withoutGlobalScope(WorkspaceScope::class)
             ->findOrFail($clientId);
 
+        abort_unless($client->slug === $clientSlug, 403, 'Access denied.');
+
         $contact = ClientContact::findOrFail($contactId);
 
         return Inertia::render('Clients::portal/Dashboard', [

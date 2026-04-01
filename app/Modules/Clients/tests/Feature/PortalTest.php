@@ -41,11 +41,11 @@ it('consuming a valid token establishes a portal session', function () {
     $client->save();
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
-
+    $plain = Str::random(64);
     $token = PortalToken::create([
         'client_id' => $client->id,
         'contact_id' => $contact->id,
-        'token' => $plain = Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHours(24),
         'consumed_at' => null,
     ]);
@@ -70,11 +70,11 @@ it('rejects an expired token', function () {
     $client->save();
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
-
+    $plain = Str::random(64);
     PortalToken::create([
         'client_id' => $client->id,
         'contact_id' => $contact->id,
-        'token' => $plain = Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->subMinute(), // expired
         'consumed_at' => null,
     ]);
@@ -93,11 +93,11 @@ it('rejects an already-consumed token', function () {
     $client->save();
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
-
+    $plain = Str::random(64);
     PortalToken::create([
         'client_id' => $client->id,
         'contact_id' => $contact->id,
-        'token' => $plain = Str::random(64),
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHours(24),
         'consumed_at' => now(), // already used
     ]);
@@ -156,4 +156,46 @@ it('portal user cannot access internal dashboard', function () {
     app()->instance(Workspace::class, $workspace);
 
     $this->get(route('dashboard'))->assertForbidden();
+});
+
+it('stores the portal token as a sha256 hash', function () {
+    actingAsWorkspaceMember('admin');
+
+    $workspace = app(Workspace::class);
+    $client = Client::factory()->create();
+    ClientContact::factory()->create([
+        'client_id' => $client->id,
+        'is_primary' => true,
+        'email' => 'contact@example.com',
+    ]);
+
+    Notification::fake();
+
+    $this->post(route('clients.portal.send-link', $client))->assertRedirect();
+
+    $token = PortalToken::where('client_id', $client->id)->firstOrFail();
+
+    // Token in DB must be a 64-char hex SHA-256 hash, not raw random bytes
+    expect(strlen($token->token))->toBe(64)
+        ->and(ctype_xdigit($token->token))->toBeTrue();
+});
+
+it('returns 403 when URL client slug does not match session client', function () {
+    // Set up two clients in the same workspace
+    $workspace = Workspace::factory()->create();
+    $clientA = Client::factory()->create(['workspace_id' => $workspace->id]);
+    $clientB = Client::factory()->create(['workspace_id' => $workspace->id]);
+    $contact = ClientContact::factory()->create(['client_id' => $clientA->id]);
+
+    // Simulate authenticated portal session for clientA
+    session([
+        'portal_client_id' => $clientA->id,
+        'portal_contact_id' => $contact->id,
+    ]);
+
+    // Navigate to clientB's URL — should be rejected
+    $this->get(route('portal.dashboard', [
+        'workspace_slug' => $workspace->slug,
+        'client_slug' => $clientB->slug,
+    ]))->assertForbidden();
 });

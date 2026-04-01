@@ -18,13 +18,19 @@ use Illuminate\Support\Facades\Route;
 // Projects routes
 // ---------------------------------------------------------------------------
 Route::middleware('web')->group(function () {
-    Route::middleware(['auth', 'workspace', 'internal'])
+    Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         ->prefix('projects')
         ->name('projects.')
         ->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('index');
             Route::get('/create', [ProjectController::class, 'create'])->name('create');
             Route::post('/', [ProjectController::class, 'store'])->name('store');
+
+            // Static routes MUST be declared before wildcard {project} routes
+            Route::get('/templates', [ProjectTemplateController::class, 'index'])->name('templates.index');
+            Route::post('/from-template', [ProjectTemplateController::class, 'fromTemplate'])->name('from-template');
+            Route::delete('/templates/{template}', [ProjectTemplateController::class, 'destroy'])->name('templates.destroy');
+
             Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
             Route::get('/{project}/edit', [ProjectController::class, 'edit'])->name('edit');
             Route::patch('/{project}', [ProjectController::class, 'update'])->name('update');
@@ -69,9 +75,6 @@ Route::middleware('web')->group(function () {
             Route::post('/{project}/timer/start', [TimerController::class, 'start'])->name('timer.start');
             Route::post('/{project}/timer/stop', [TimerController::class, 'stop'])->name('timer.stop');
 
-            Route::get('/templates', [ProjectTemplateController::class, 'index'])->name('templates.index');
-            Route::post('/from-template', [ProjectTemplateController::class, 'fromTemplate'])->name('from-template');
-            Route::delete('/templates/{template}', [ProjectTemplateController::class, 'destroy'])->name('templates.destroy');
             Route::post('/{project}/save-as-template', [ProjectTemplateController::class, 'store'])->name('templates.store');
             Route::get('/{project}/gantt', [ProjectController::class, 'gantt'])->name('gantt');
         });

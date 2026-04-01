@@ -57,11 +57,11 @@ class ClientContactController extends Controller
 
         abort_unless($contact->client_id === $client->id, 404);
 
-        $warPrimary = $contact->is_primary;
+        $wasPrimary = $contact->is_primary;
 
         $contact->delete();
 
-        if ($warPrimary) {
+        if ($wasPrimary) {
             $next = $client->contacts()->orderBy('id')->first();
             $next?->update(['is_primary' => true]);
         }

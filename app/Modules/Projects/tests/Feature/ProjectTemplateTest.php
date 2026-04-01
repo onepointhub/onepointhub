@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectTemplate;
@@ -23,11 +24,11 @@ it('saves a project as a template', function () {
 });
 
 it('creates a project from a template', function () {
-    actingAsWorkspaceMember('admin');
+    [$user, $workspace] = actingAsWorkspaceMember('admin');
 
-    $template = ProjectTemplate::factory()->create();
+    $template = ProjectTemplate::factory()->create(['workspace_id' => $workspace->id]);
 
-    $this->post(route('projects.from-template'), [
+    $response = $this->post(route('projects.from-template'), [
         'template_id' => $template->id,
         'name' => 'New from Template',
         'status' => 'active',
@@ -57,14 +58,33 @@ it('can delete a custom template', function () {
     expect(ProjectTemplate::find($template->id))->toBeNull();
 });
 
-// it('lists available templates', function () {
-//    actingAsWorkspaceMember('member');
-//
-//    ProjectTemplate::factory()->count(2)->create();
-//
-//    $this->get(route('projects.templates.index'))
-//        ->assertOk()
-//        ->assertInertia(fn ($page) => $page->component('projects/Templates')
-//            ->has('templates', 2)
-//        );
-// });
+it('lists available templates', function () {
+    actingAsWorkspaceMember('member');
+
+    ProjectTemplate::factory()->count(2)->create();
+
+    $this->get(route('projects.templates.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('Projects::Templates')
+            ->has('templates', 2)
+        );
+});
+
+it('cannot create a project from another workspace template', function () {
+    actingAsWorkspaceMember('admin');
+
+    // Create a template belonging to a different workspace (bypass global scope)
+    $otherWorkspace = Workspace::factory()->create();
+    $otherTemplate = ProjectTemplate::factory()->create([
+        'workspace_id' => $otherWorkspace->id,
+    ]);
+
+    $response = $this->post(route('projects.from-template'), [
+        'template_id' => $otherTemplate->id,
+        'name' => 'Stolen Template Project',
+        'status' => 'active',
+        'type' => 'fixed',
+    ]);
+
+    $response->assertInvalid(['template_id']);
+});

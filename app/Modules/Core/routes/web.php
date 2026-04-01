@@ -16,7 +16,7 @@ use App\Modules\Core\Http\Controllers\WorkspaceSwitchController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('web')->group(function () {
-    Route::get('/', fn () => 'Home page')->name('home');
+    Route::get('/', fn () => redirect()->route('dashboard'))->name('home');
 
     // ---------------------------------------------------------------------------
     // Authenticated routes

@@ -157,7 +157,7 @@ class ProjectController extends Controller
 
     public function show(Project $project): InertiaResponse
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         return Inertia::render('Projects::Show', [
             'project' => [
@@ -178,7 +178,7 @@ class ProjectController extends Controller
 
     public function board(Project $project): InertiaResponse
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         $tasks = $project->tasks()
             ->whereNull('parent_id')
@@ -223,7 +223,7 @@ class ProjectController extends Controller
 
     public function tasks(Request $request, Project $project): InertiaResponse
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         $tasks = $project->tasks()
             ->whereNull('parent_id')
@@ -231,7 +231,7 @@ class ProjectController extends Controller
             ->withCount('subTasks')
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->when($request->priority, fn ($q) => $q->where('priority', $request->priority))
-            ->when($request->assignee_id, fn ($q) => $q->where('assignee_id', $request->assignee_id))
+            ->when($request->assignee_id, fn ($q) => $q->where('assigned_to', $request->assignee_id))
             ->when($request->due_before, fn ($q) => $q->where('due_at', '<=', $request->due_before))
             ->orderBy('position')
             ->get()
@@ -273,7 +273,7 @@ class ProjectController extends Controller
 
     public function gantt(Project $project): InertiaResponse
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         $milestones = $project->milestones()
             ->whereNotNull('due_at')

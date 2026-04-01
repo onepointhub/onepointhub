@@ -26,16 +26,18 @@ class InvitationController extends Controller
         /** @var int $expiry */
         $expiry = config('workspace.invitation_expiry_hours');
 
+        $plain = Str::random(64);
+
         $invitation = WorkspaceInvitation::create([
             'workspace_id' => $workspace->id,
             'email' => $request->validated('email'),
             'role' => $request->validated('role'),
-            'token' => Str::random(64),
+            'token' => hash('sha256', $plain),
             'expires_at' => now()->addHours($expiry),
         ]);
 
         Notification::route('mail', $invitation->email)
-            ->notify(new WorkspaceInvitationNotification($invitation));
+            ->notify(new WorkspaceInvitationNotification($invitation, $plain));
 
         return redirect()->route('workspace.members.index')
             ->with('status', 'Invitation sent.');
@@ -46,7 +48,7 @@ class InvitationController extends Controller
      */
     public function accept(Request $request, string $token): RedirectResponse
     {
-        $invitation = WorkspaceInvitation::where('token', $token)->firstOrFail();
+        $invitation = WorkspaceInvitation::where('token', hash('sha256', $token))->firstOrFail();
 
         if ($invitation->accepted_at !== null) {
             return redirect()->route('dashboard');
@@ -71,6 +73,7 @@ class InvitationController extends Controller
                 setPermissionsTeamId($invitation->workspace_id);
                 $user->workspaces()->attach($invitation->workspace_id, ['role' => $invitation->role]);
                 $user->assignRole($invitation->role);
+                $invitation->update(['accepted_at' => now()]);
             });
 
             // Notify all owners and admins (excluding the new member)
@@ -80,9 +83,9 @@ class InvitationController extends Controller
                 ->get();
 
             Notification::send($notifiables, new MemberJoinedNotification($user, $workspace));
+        } else {
+            $invitation->update(['accepted_at' => now()]);
         }
-
-        $invitation->update(['accepted_at' => now()]);
 
         return redirect()->route('dashboard');
     }

@@ -6,6 +6,7 @@ use App\Modules\Clients\Jobs\ImportClientsJob;
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\User;
 use App\Modules\Core\Models\Workspace;
+use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -80,6 +81,11 @@ class ClientImportController extends Controller
             'path' => [
                 'required',
                 'string',
+                function (string $attribute, string $value, Closure $fail) {
+                    if (! str_starts_with($value, 'imports/')) {
+                        $fail('The import file path is invalid.');
+                    }
+                },
             ],
             'mapping' => [
                 'required',

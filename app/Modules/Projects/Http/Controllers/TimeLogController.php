@@ -13,10 +13,10 @@ class TimeLogController extends Controller
 {
     public function __invoke(Project $project): Response
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         $entries = $project->timeEntries()
-            ->with('user:id,name,avatar', 'task:id,title')
+            ->with('user:id,name,profile_photo_path', 'task:id,title')
             ->latest('started_at')
             ->get()
             ->map(fn (TimeEntry $e) => [
@@ -36,7 +36,7 @@ class TimeLogController extends Controller
         /** @var int $billableMinutes */
         $billableMinutes = $entries->where('billable', true)->sum('duration_minutes');
 
-        return Inertia::render('projects/TimeLog', [
+        return Inertia::render('Projects::TimeLog', [
             'project' => ['id' => $project->id, 'name' => $project->name],
             'entries' => $entries,
             'totals' => [
