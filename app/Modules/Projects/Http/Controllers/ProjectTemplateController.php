@@ -3,13 +3,16 @@
 namespace App\Modules\Projects\Http\Controllers;
 
 use App\Modules\Core\Http\Controllers\Controller;
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Http\Requests\StoreProjectRequest;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectTemplate;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -80,8 +83,17 @@ class ProjectTemplateController extends Controller
      */
     public function fromTemplate(StoreProjectRequest $request): RedirectResponse
     {
+        $workspace = app(Workspace::class);
+
         $request->validate([
-            'template_id' => ['required', 'exists:project_templates,id'],
+            'template_id' => [
+                'required',
+                Rule::exists('project_templates', 'id')
+                    ->where(function (Builder $query) use ($workspace) {
+                        $query->where('workspace_id', $workspace->id)
+                            ->orWhere('is_builtin', true);
+                    }),
+            ],
         ]);
 
         $template = ProjectTemplate::findOrFail($request->template_id);

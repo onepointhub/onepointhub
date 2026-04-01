@@ -39,6 +39,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: portal magic link tokens are now stored as SHA-256 hashes; plain token only ever appears in the email URL
 - fix: invitation `accepted_at` timestamp is now updated inside the database transaction to prevent re-use on server crash
 - security: added `verified` middleware to Clients and Projects route groups to enforce email verification
+- security: `from-template` now validates that the template belongs to the current workspace (or is a built-in template)
 
 ---
 
