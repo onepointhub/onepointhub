@@ -11,6 +11,9 @@ breaking changes between any two versions — see upgrade notes per version.
 ---
 
 ## [Unreleased]
+
+### Added
+
 - Projects module: database schema for projects, project_members, and milestones with models, enums, and factories (#30)
 - Projects module: paginated project list with card/table toggle, status/client filters, and task progress bars (#31)
 - Projects module: create and edit project forms with client select, budget, date range, colour picker, and team member management (#32)
@@ -23,6 +26,10 @@ breaking changes between any two versions — see upgrade notes per version.
 - Projects module: project templates with save-as-template, create-from-template, and 3 built-in templates (Web Design, Software Sprint, Monthly Retainer) (#41)
 - Projects module: Gantt/timeline view with milestone diamonds, task bars, week/month/quarter zoom levels, and PNG export (#40)
 
+### Changed
+
+- bulk-assign tasks now correctly writes to `assigned_to` column; assignee filter on task list now works
+- user avatars now correctly loaded on task detail and time log pages
 ---
 
 ## [0.3.0] - 2026-03-30

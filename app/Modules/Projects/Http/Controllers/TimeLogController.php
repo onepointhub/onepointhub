@@ -16,7 +16,7 @@ class TimeLogController extends Controller
         //        Gate::authorize('view-project');
 
         $entries = $project->timeEntries()
-            ->with('user:id,name,avatar', 'task:id,title')
+            ->with('user:id,name,profile_photo_path', 'task:id,title')
             ->latest('started_at')
             ->get()
             ->map(fn (TimeEntry $e) => [

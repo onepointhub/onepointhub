@@ -27,7 +27,7 @@ class TaskBulkController extends Controller
 
         match ($validated['action']) {
             'status' => $tasks->update(['status' => $validated['value']]),
-            'assign' => $tasks->update(['assignee_id' => $validated['value']]),
+            'assign' => $tasks->update(['assigned_to' => $validated['value']]),
             'delete' => $tasks->delete(),
             default => throw new UnhandledMatchError('Unsupported action: '.$validated['action']),
         };

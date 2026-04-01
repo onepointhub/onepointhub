@@ -231,7 +231,7 @@ class ProjectController extends Controller
             ->withCount('subTasks')
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->when($request->priority, fn ($q) => $q->where('priority', $request->priority))
-            ->when($request->assignee_id, fn ($q) => $q->where('assignee_id', $request->assignee_id))
+            ->when($request->assignee_id, fn ($q) => $q->where('assigned_to', $request->assignee_id))
             ->when($request->due_before, fn ($q) => $q->where('due_at', '<=', $request->due_before))
             ->orderBy('position')
             ->get()
