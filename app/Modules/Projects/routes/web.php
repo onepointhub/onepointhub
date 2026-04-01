@@ -8,6 +8,9 @@ use App\Modules\Projects\Http\Controllers\TaskCommentReactionController;
 use App\Modules\Projects\Http\Controllers\TaskController;
 use App\Modules\Projects\Http\Controllers\TaskDetailController;
 use App\Modules\Projects\Http\Controllers\TaskMoveController;
+use App\Modules\Projects\Http\Controllers\TimeEntryController;
+use App\Modules\Projects\Http\Controllers\TimeLogController;
+use App\Modules\Projects\Http\Controllers\TimerController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------------------------------------------------------
@@ -58,5 +61,11 @@ Route::middleware('web')->group(function () {
                     Route::delete('{comment}', [TaskCommentController::class, 'destroy'])->name('destroy');
                     Route::post('{comment}/react', TaskCommentReactionController::class)->name('react');
                 });
+
+            Route::get('/{project}/timelog', TimeLogController::class)->name('timelog');
+            Route::post('/{project}/time', [TimeEntryController::class, 'store'])->name('time.store');
+            Route::delete('/{project}/time/{entry}', [TimeEntryController::class, 'destroy'])->name('time.destroy');
+            Route::post('/{project}/timer/start', [TimerController::class, 'start'])->name('timer.start');
+            Route::post('/{project}/timer/stop', [TimerController::class, 'stop'])->name('timer.stop');
         });
 });

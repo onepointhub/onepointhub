@@ -58,6 +58,7 @@ class PermissionSeeder extends Seeder
         $member = Role::firstOrCreate(['name' => 'member']);
         $member->givePermissionTo([
             'create-project',
+            'update-project',
             'view-client',
             'create-client',
             'update-client',
