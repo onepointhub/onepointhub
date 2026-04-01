@@ -17,7 +17,8 @@ class WorkspaceInvitationNotification extends Notification implements ShouldQueu
      * Create a new notification instance.
      */
     public function __construct(
-        public readonly WorkspaceInvitation $invitation
+        public readonly WorkspaceInvitation $invitation,
+        public readonly string $plain,
     ) {}
 
     /**
@@ -38,7 +39,7 @@ class WorkspaceInvitationNotification extends Notification implements ShouldQueu
         /** @var Workspace $workspace */
         $workspace = $this->invitation->workspace;
 
-        $url = route('invitations.accept', ['token' => $this->invitation->token]);
+        $url = route('invitations.accept', ['token' => $this->plain]);
 
         return (new MailMessage)
             ->subject('You\'ve been invited to '.$workspace->name)

@@ -172,4 +172,3 @@ it('denies members from accessing the activity log', function () {
 
     $this->get(route('workspace.activity-log.index'))->assertForbidden();
 });
-

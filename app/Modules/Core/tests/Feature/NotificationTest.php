@@ -13,16 +13,17 @@ it('notifies workspace owners when an invitation is accepted', function () {
     [$owner, $workspace] = workspaceWithUser('owner');
 
     $invitee = User::factory()->create();
+    $plain = 'test-token-123';
     WorkspaceInvitation::factory()->create([
         'workspace_id' => $workspace->id,
         'email' => $invitee->email,
         'role' => WorkspaceRole::Member->value,
-        'token' => 'test-token-123',
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHour(),
     ]);
 
     $this->actingAs($invitee)
-        ->get(route('invitations.accept', ['token' => 'test-token-123']))
+        ->get(route('invitations.accept', ['token' => $plain]))
         ->assertRedirect(route('dashboard'));
 
     Notification::assertSentTo($owner, MemberJoinedNotification::class);
@@ -34,16 +35,17 @@ it('does not notify the new member themselves', function () {
     [$owner, $workspace] = workspaceWithUser('owner');
 
     $invitee = User::factory()->create();
+    $plain = 'test-token-456';
     WorkspaceInvitation::factory()->create([
         'workspace_id' => $workspace->id,
         'email' => $invitee->email,
         'role' => WorkspaceRole::Member->value,
-        'token' => 'test-token-456',
+        'token' => hash('sha256', $plain),
         'expires_at' => now()->addHour(),
     ]);
 
     $this->actingAs($invitee)
-        ->get(route('invitations.accept', ['token' => 'test-token-456']))
+        ->get(route('invitations.accept', ['token' => $plain]))
         ->assertRedirect();
 
     Notification::assertNotSentTo($invitee, MemberJoinedNotification::class);
