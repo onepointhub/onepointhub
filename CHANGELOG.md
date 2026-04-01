@@ -45,6 +45,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - perf: client CSV export now pre-loads all custom field values in a single query instead of one per client
 - fix: client CSV export filename now correctly includes `.csv` extension
 - fix: timer start now uses a database transaction with row locking to prevent duplicate running timers under concurrent requests
+- refactor: extracted shared project validation rules into `ProjectRequestRules` trait to eliminate duplication between `StoreProjectRequest` and `UpdateProjectRequest`
 
 ---
 
