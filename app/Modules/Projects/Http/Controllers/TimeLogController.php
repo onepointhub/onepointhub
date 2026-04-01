@@ -36,7 +36,7 @@ class TimeLogController extends Controller
         /** @var int $billableMinutes */
         $billableMinutes = $entries->where('billable', true)->sum('duration_minutes');
 
-        return Inertia::render('projects/TimeLog', [
+        return Inertia::render('Projects::TimeLog', [
             'project' => ['id' => $project->id, 'name' => $project->name],
             'entries' => $entries,
             'totals' => [

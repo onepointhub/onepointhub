@@ -46,6 +46,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: client CSV export filename now correctly includes `.csv` extension
 - fix: timer start now uses a database transaction with row locking to prevent duplicate running timers under concurrent requests
 - refactor: extracted shared project validation rules into `ProjectRequestRules` trait to eliminate duplication between `StoreProjectRequest` and `UpdateProjectRequest`
+- refactor: standardised Inertia component path in `TimeLogController` to use `Projects::TimeLog` module prefix
 
 ---
 
