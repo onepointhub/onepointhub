@@ -85,14 +85,14 @@ class ClientController extends Controller
 
             $definitions = CustomFieldDefinition::orderBy('sort_order')->get();
 
-            /** @var array<int|string, string|null> $data */
-            $data = array_merge(
+            /** @var array<int|string, string|null> $headerRow */
+            $headerRow = array_merge(
                 ['ID', 'Name', 'Type', 'Status', 'Currency', 'Website', 'VAT Number', 'Notes', 'Created At'],
                 $definitions->pluck('label')->all(),
             );
-            fputcsv($handle, $data);
+            fputcsv($handle, $headerRow);
 
-            Client::query()
+            $query = Client::query()
                 ->when($request->input('ids'), function ($q, $ids) {
                     /** @var string $ids */
                     $q->whereIn('id', explode(',', $ids));
@@ -101,30 +101,36 @@ class ClientController extends Controller
                     ! $request->input('ids') && $request->input('status'),
                     fn ($q) => $q->where('status', $request->input('status')),
                 )
-                ->orderBy('name')
-                ->each(function (Client $client) use ($handle, $definitions) {
-                    $values = CustomFieldValue::where('model_type', Client::class)
-                        ->where('model_id', $client->id)
-                        ->pluck('value', 'custom_field_definition_id');
+                ->orderBy('name');
 
-                    /** @var array<int|string, string|null> $data */
-                    $data = array_merge(
-                        [
-                            $client->id,
-                            $client->name,
-                            $client->type->value,
-                            $client->status->value,
-                            $client->currency,
-                            $client->website,
-                            $client->vat_number,
-                            $client->notes,
-                            $client->created_at->toDateTimeString(),
-                        ],
-                        $definitions->map(fn ($d) => $values[$d->id] ?? null)->all(),
-                    );
+            // Preload all custom field values in one query, keyed by model_id
+            $clientIds = (clone $query)->pluck('id');
+            $allValues = CustomFieldValue::where('model_type', Client::class)
+                ->whereIn('model_id', $clientIds)
+                ->get()
+                ->groupBy('model_id');
 
-                    fputcsv($handle, $data);
-                });
+            $query->each(function (Client $client) use ($handle, $definitions, $allValues) {
+                $values = ($allValues[$client->id] ?? collect())->pluck('value', 'custom_field_definition_id');
+
+                /** @var array<int|string, string|null> $data */
+                $data = array_merge(
+                    [
+                        $client->id,
+                        $client->name,
+                        $client->type->value,
+                        $client->status->value,
+                        $client->currency,
+                        $client->website,
+                        $client->vat_number,
+                        $client->notes,
+                        $client->created_at->toDateTimeString(),
+                    ],
+                    $definitions->map(fn ($d) => $values[$d->id] ?? null)->all(),
+                );
+
+                fputcsv($handle, $data);
+            });
 
             fclose($handle);
         };

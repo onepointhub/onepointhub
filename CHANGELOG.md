@@ -42,6 +42,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: `from-template` now validates that the template belongs to the current workspace (or is a built-in template)
 - fix: portal dashboard now validates URL client slug matches the authenticated portal session to prevent navigation confusion
 - security: import file path is now validated to prevent directory traversal outside the `imports/` directory
+- perf: client CSV export now pre-loads all custom field values in a single query instead of one per client
 
 ---
 
