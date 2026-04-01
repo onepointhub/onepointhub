@@ -20,6 +20,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Projects module: task detail page with inline editing, sub-tasks checklist, and deferred comments/activity (#36)
 - Projects module: task comments with markdown body, @mention notifications, edit/delete own comments, and emoji reactions (#37)
 - Projects module: time tracking with live timer (localStorage persistence), manual time entry, billable/non-billable split, and invoiced-entry locking (#38)
+- Projects module: project templates with save-as-template, create-from-template, and 3 built-in templates (Web Design, Software Sprint, Monthly Retainer) (#41)
 
 ---
 
