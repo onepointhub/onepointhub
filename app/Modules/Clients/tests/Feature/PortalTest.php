@@ -179,3 +179,23 @@ it('stores the portal token as a sha256 hash', function () {
     expect(strlen($token->token))->toBe(64)
         ->and(ctype_xdigit($token->token))->toBeTrue();
 });
+
+it('returns 403 when URL client slug does not match session client', function () {
+    // Set up two clients in the same workspace
+    $workspace = Workspace::factory()->create();
+    $clientA = Client::factory()->create(['workspace_id' => $workspace->id]);
+    $clientB = Client::factory()->create(['workspace_id' => $workspace->id]);
+    $contact = ClientContact::factory()->create(['client_id' => $clientA->id]);
+
+    // Simulate authenticated portal session for clientA
+    session([
+        'portal_client_id' => $clientA->id,
+        'portal_contact_id' => $contact->id,
+    ]);
+
+    // Navigate to clientB's URL — should be rejected
+    $this->get(route('portal.dashboard', [
+        'workspace_slug' => $workspace->slug,
+        'client_slug' => $clientB->slug,
+    ]))->assertForbidden();
+});

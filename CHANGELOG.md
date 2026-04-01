@@ -40,6 +40,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: invitation `accepted_at` timestamp is now updated inside the database transaction to prevent re-use on server crash
 - security: added `verified` middleware to Clients and Projects route groups to enforce email verification
 - security: `from-template` now validates that the template belongs to the current workspace (or is a built-in template)
+- fix: portal dashboard now validates URL client slug matches the authenticated portal session to prevent navigation confusion
 
 ---
 
