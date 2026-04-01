@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 // Projects routes
 // ---------------------------------------------------------------------------
 Route::middleware('web')->group(function () {
-    Route::middleware(['auth', 'workspace', 'internal'])
+    Route::middleware(['auth', 'verified', 'workspace', 'internal'])
         ->prefix('projects')
         ->name('projects.')
         ->group(function () {
