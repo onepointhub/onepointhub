@@ -43,6 +43,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: portal dashboard now validates URL client slug matches the authenticated portal session to prevent navigation confusion
 - security: import file path is now validated to prevent directory traversal outside the `imports/` directory
 - perf: client CSV export now pre-loads all custom field values in a single query instead of one per client
+- fix: client CSV export filename now correctly includes `.csv` extension
 
 ---
 

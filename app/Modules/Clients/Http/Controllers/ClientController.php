@@ -76,7 +76,7 @@ class ClientController extends Controller
 
         $headers = [
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="clients-'.$workspace->slug.'csv"',
+            'Content-Disposition' => "attachment; filename=\"clients-$workspace->slug.csv\"",
         ];
 
         $callback = function () use ($request) {
