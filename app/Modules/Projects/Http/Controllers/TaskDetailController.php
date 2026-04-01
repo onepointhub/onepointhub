@@ -74,21 +74,21 @@ class TaskDetailController extends Controller
             'subTasks' => $subTasks,
             'canEdit' => Gate::check('update-project'),
             // Deferred: only loaded when panel is open
-            //            'comments' => Inertia::defer(fn () => $task->comments()
-            //                ->with('user:id,name,profile_photo_url')
-            //                ->latest()
-            //                ->get()
-            //                ->map(fn ($comment) => [
-            //                    'id' => $comment->id,
-            //                    'body' => $comment->body,
-            //                    'user' => [
-            //                        'id' => $comment->user->id,
-            //                        'name' => $comment->user->name,
-            //                        'avatar' => $comment->user->profile_photo_path,
-            //                    ],
-            //                    'created_at' => $comment->created_at->toDateTimeString(),
-            //                ])
-            //            ),
+            'comments' => Inertia::defer(fn () => $task->comments()
+                ->with('user:id,name,profile_photo_url')
+                ->latest()
+                ->get()
+                ->map(fn ($comment) => [
+                    'id' => $comment->id,
+                    'body' => $comment->body,
+                    'user' => [
+                        'id' => $comment->user?->id,
+                        'name' => $comment->user?->name,
+                        'avatar' => $comment->user?->profile_photo_path,
+                    ],
+                    'created_at' => $comment->created_at->toDateTimeString(),
+                ])
+            ),
             'activity' => Inertia::defer(fn () => ActivityLog::query()
                 ->where('subject_type', Task::class)
                 ->where('subject_id', $task->id)

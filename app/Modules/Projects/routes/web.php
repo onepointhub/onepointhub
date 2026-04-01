@@ -3,6 +3,8 @@
 use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
 use App\Modules\Projects\Http\Controllers\TaskBulkController;
+use App\Modules\Projects\Http\Controllers\TaskCommentController;
+use App\Modules\Projects\Http\Controllers\TaskCommentReactionController;
 use App\Modules\Projects\Http\Controllers\TaskController;
 use App\Modules\Projects\Http\Controllers\TaskDetailController;
 use App\Modules\Projects\Http\Controllers\TaskMoveController;
@@ -47,5 +49,14 @@ Route::middleware('web')->group(function () {
             Route::get('/{project}/tasks', [ProjectController::class, 'tasks'])->name('tasks');
             Route::post('/{project}/tasks/bulk', TaskBulkController::class)->name('tasks.bulk');
             Route::get('/{project}/tasks/{task}/detail', TaskDetailController::class)->name('tasks.detail');
+
+            Route::prefix('{project}/tasks/{task}/comments')
+                ->name('tasks.comments.')
+                ->group(function () {
+                    Route::post('/', [TaskCommentController::class, 'store'])->name('store');
+                    Route::patch('{comment}', [TaskCommentController::class, 'update'])->name('update');
+                    Route::delete('{comment}', [TaskCommentController::class, 'destroy'])->name('destroy');
+                    Route::post('{comment}/react', TaskCommentReactionController::class)->name('react');
+                });
         });
 });

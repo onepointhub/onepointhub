@@ -18,6 +18,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Projects module: milestone create/edit/delete/complete with task progress tracking and overdue badge (#39)
 - Projects module: task list with flat and milestone-grouped modes, inline status editing, and bulk actions (#35)
 - Projects module: task detail page with inline editing, sub-tasks checklist, and deferred comments/activity (#36)
+- Projects module: task comments with markdown body, @mention notifications, edit/delete own comments, and emoji reactions (#37)
 
 ---
 

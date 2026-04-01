@@ -116,8 +116,11 @@ class Task extends Model
         return $this->belongsToMany(TaskLabel::class, 'task_label_task');
     }
 
-    //    public function comments(): HasMany
-    //    {
-    //        return $this->hasMany(TaskComment::class);
-    //    }
+    /**
+     * @return HasMany<TaskComment, $this>
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TaskComment::class);
+    }
 }

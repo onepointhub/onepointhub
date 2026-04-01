@@ -48,7 +48,7 @@ it('validates budget is numeric when provided', function () {
 });
 
 it('renders the edit project page', function () {
-    actingAsWorkspaceMember('member');
+    actingAsWorkspaceMember('admin');
 
     $project = Project::factory()->create();
 

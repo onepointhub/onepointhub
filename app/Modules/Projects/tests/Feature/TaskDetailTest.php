@@ -53,20 +53,20 @@ it('returns deferred activity', function () {
         );
 });
 
-// it('returns deferred comments', function () {
-//    actingAsWorkspaceMember('member');
-//
-//    $project = Project::factory()->create();
-//    $task = Task::factory()->create(['project_id' => $project->id, 'parent_id' => null]);
-//
-//    $this->get(route('projects.tasks.detail', [$project, $task]))
-//        ->assertOk()
-//        ->assertInertia(fn ($page) => $page
-//            ->loadDeferredProps(fn (Assert $reload) => $reload
-//                ->has('comments')
-//            )
-//        );
-// });
+it('returns deferred comments', function () {
+    actingAsWorkspaceMember('member');
+
+    $project = Project::factory()->create();
+    $task = Task::factory()->create(['project_id' => $project->id, 'parent_id' => null]);
+
+    $this->get(route('projects.tasks.detail', [$project, $task]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->loadDeferredProps(fn (Assert $reload) => $reload
+                ->has('comments')
+            )
+        );
+});
 
 it('returns 404 for task in another project', function () {
     actingAsWorkspaceMember('admin');
