@@ -2,6 +2,7 @@
 
 use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
+use App\Modules\Projects\Http\Controllers\ProjectTemplateController;
 use App\Modules\Projects\Http\Controllers\TaskBulkController;
 use App\Modules\Projects\Http\Controllers\TaskCommentController;
 use App\Modules\Projects\Http\Controllers\TaskCommentReactionController;
@@ -67,5 +68,10 @@ Route::middleware('web')->group(function () {
             Route::delete('/{project}/time/{entry}', [TimeEntryController::class, 'destroy'])->name('time.destroy');
             Route::post('/{project}/timer/start', [TimerController::class, 'start'])->name('timer.start');
             Route::post('/{project}/timer/stop', [TimerController::class, 'stop'])->name('timer.stop');
+
+            Route::get('/templates', [ProjectTemplateController::class, 'index'])->name('templates.index');
+            Route::post('/from-template', [ProjectTemplateController::class, 'fromTemplate'])->name('from-template');
+            Route::delete('/templates/{template}', [ProjectTemplateController::class, 'destroy'])->name('templates.destroy');
+            Route::post('/{project}/save-as-template', [ProjectTemplateController::class, 'store'])->name('templates.store');
         });
 });
