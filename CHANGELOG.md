@@ -30,6 +30,8 @@ breaking changes between any two versions — see upgrade notes per version.
 
 - bulk-assign tasks now correctly writes to `assigned_to` column; assignee filter on task list now works
 - user avatars now correctly loaded on task detail and time log pages
+- project templates index page was unreachable due to route ordering conflict with `/{project}` wildcard
+
 ---
 
 ## [0.3.0] - 2026-03-30

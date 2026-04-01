@@ -57,14 +57,14 @@ it('can delete a custom template', function () {
     expect(ProjectTemplate::find($template->id))->toBeNull();
 });
 
-// it('lists available templates', function () {
-//    actingAsWorkspaceMember('member');
-//
-//    ProjectTemplate::factory()->count(2)->create();
-//
-//    $this->get(route('projects.templates.index'))
-//        ->assertOk()
-//        ->assertInertia(fn ($page) => $page->component('projects/Templates')
-//            ->has('templates', 2)
-//        );
-// });
+it('lists available templates', function () {
+    actingAsWorkspaceMember('member');
+
+    ProjectTemplate::factory()->count(2)->create();
+
+    $this->get(route('projects.templates.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('Projects::Templates')
+            ->has('templates', 2)
+        );
+});
