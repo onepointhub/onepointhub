@@ -27,6 +27,8 @@ class ProjectsServiceProvider extends ModuleServiceProvider
             'create-project',
             'update-project',
             'delete-project',
+            'view-project',
+            'delete-task',
         ];
     }
 

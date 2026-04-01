@@ -75,7 +75,6 @@ Route::middleware('web')->group(function () {
             Route::post('/{project}/timer/start', [TimerController::class, 'start'])->name('timer.start');
             Route::post('/{project}/timer/stop', [TimerController::class, 'stop'])->name('timer.stop');
 
-
             Route::post('/{project}/save-as-template', [ProjectTemplateController::class, 'store'])->name('templates.store');
             Route::get('/{project}/gantt', [ProjectController::class, 'gantt'])->name('gantt');
         });

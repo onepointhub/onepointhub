@@ -13,7 +13,7 @@ class TimeLogController extends Controller
 {
     public function __invoke(Project $project): Response
     {
-        //        Gate::authorize('view-project');
+        Gate::authorize('view-project');
 
         $entries = $project->timeEntries()
             ->with('user:id,name,profile_photo_path', 'task:id,title')

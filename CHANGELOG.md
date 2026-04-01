@@ -28,9 +28,12 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ### Changed
 
-- bulk-assign tasks now correctly writes to `assigned_to` column; assignee filter on task list now works
-- user avatars now correctly loaded on task detail and time log pages
-- project templates index page was unreachable due to route ordering conflict with `/{project}` wildcard
+- fix: bulk-assign tasks now correctly writes to `assigned_to` column; assignee filter on task list now works
+- fix: user avatars now correctly loaded on task detail and time log pages
+- fix: project templates index page was unreachable due to route ordering conflict with `/{project}` wildcard
+- security: re-enabled project authorization — `view-project` gate now enforced on show, board, task list, gantt, and time log endpoints
+- security: added explicit `Gate::define` calls for all project and task gates
+- security: added `view-project` and `delete-task` permissions to Projects module
 
 ---
 
