@@ -73,6 +73,7 @@ class InvitationController extends Controller
                 setPermissionsTeamId($invitation->workspace_id);
                 $user->workspaces()->attach($invitation->workspace_id, ['role' => $invitation->role]);
                 $user->assignRole($invitation->role);
+                $invitation->update(['accepted_at' => now()]);
             });
 
             // Notify all owners and admins (excluding the new member)
@@ -82,9 +83,9 @@ class InvitationController extends Controller
                 ->get();
 
             Notification::send($notifiables, new MemberJoinedNotification($user, $workspace));
+        } else {
+            $invitation->update(['accepted_at' => now()]);
         }
-
-        $invitation->update(['accepted_at' => now()]);
 
         return redirect()->route('dashboard');
     }
