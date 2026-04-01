@@ -8,7 +8,7 @@ class ClientsServiceProvider extends ModuleServiceProvider
 {
     public function moduleName(): string
     {
-        return 'clients';
+        return 'Clients';
     }
 
     public function register(): void
