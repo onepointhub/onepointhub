@@ -36,6 +36,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: added `view-project` and `delete-task` permissions to Projects module
 - fix: admins can now access the Activity Log — `view-activity-log` gate is now defined and seeded
 - security: workspace invitation tokens are now stored as SHA-256 hashes; plain token is only ever in the invitation email URL
+- security: portal magic link tokens are now stored as SHA-256 hashes; plain token only ever appears in the email URL
 
 ---
 

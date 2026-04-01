@@ -37,7 +37,7 @@ class PortalAuthController extends Controller
         PortalToken::create([
             'client_id' => $client->id,
             'contact_id' => $contact->id,
-            'token' => $plain,
+            'token' => hash('sha256', $plain),
             'expires_at' => now()->addHours(24),
         ]);
 
@@ -66,7 +66,7 @@ class PortalAuthController extends Controller
             ->where('slug', $clientSlug)
             ->firstOrFail();
 
-        $record = PortalToken::where('token', $token)
+        $record = PortalToken::where('token', hash('sha256', $token))
             ->where('client_id', $client->id)
             ->firstOrFail();
 
