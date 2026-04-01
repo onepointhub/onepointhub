@@ -49,6 +49,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - refactor: standardised Inertia component path in `TimeLogController` to use `Projects::TimeLog` module prefix
 - fix: renamed `$warPrimary` variable to `$wasPrimary` in `ClientContactController`
 - fix: standardised `ClientsServiceProvider::moduleName()` to return `'Clients'` (title-case)
+- fix: home route now redirects to the dashboard instead of returning a plain text string
 
 ---
 
