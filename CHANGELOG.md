@@ -41,6 +41,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: added `verified` middleware to Clients and Projects route groups to enforce email verification
 - security: `from-template` now validates that the template belongs to the current workspace (or is a built-in template)
 - fix: portal dashboard now validates URL client slug matches the authenticated portal session to prevent navigation confusion
+- security: import file path is now validated to prevent directory traversal outside the `imports/` directory
 
 ---
 
