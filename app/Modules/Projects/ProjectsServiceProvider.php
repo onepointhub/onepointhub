@@ -34,8 +34,8 @@ class ProjectsServiceProvider extends ModuleServiceProvider
     {
         return [
             [
-                'label' => 'Projects',
-                'route' => '/projects',
+                'title' => 'Projects',
+                'href' => route('projects.index'),
                 'icon' => 'folder',
             ],
         ];

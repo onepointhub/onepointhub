@@ -25,7 +25,7 @@ abstract class ModuleServiceProvider extends ServiceProvider
     /**
      * Navigation items this module contributes to the sidebar.
      *
-     * @return array<array{label: string, route: string, icon?: string}>
+     * @return array<array{title: string, href: string, icon?: string}>
      */
     public function navigation(): array
     {

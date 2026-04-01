@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavItem } from '@/types'
-import { LayoutGrid } from 'lucide-vue-next'
+import { usePage } from '@inertiajs/vue3'
+import { LayoutGrid, LucideSettings2 } from 'lucide-vue-next'
 import NavMain from '@/components/NavMain.vue'
 import {
   Sidebar,
@@ -9,12 +10,21 @@ import {
 } from '@/components/ui/sidebar'
 import WorkspaceSwitcher from '@/components/WorkspaceSwitcher.vue'
 import { dashboard } from '@/routes'
+import { index } from '@/routes/workspace/members'
+
+const page = usePage()
 
 const mainNavItems: NavItem[] = [
   {
     title: 'Dashboard',
     href: dashboard(),
     icon: LayoutGrid,
+  },
+  ...(page.props.navigation || []),
+  {
+    title: 'Settings',
+    href: index(),
+    icon: LucideSettings2,
   },
 ]
 </script>

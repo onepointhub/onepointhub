@@ -4,6 +4,7 @@ use App\Modules\Projects\Http\Controllers\MilestoneController;
 use App\Modules\Projects\Http\Controllers\ProjectController;
 use App\Modules\Projects\Http\Controllers\TaskBulkController;
 use App\Modules\Projects\Http\Controllers\TaskController;
+use App\Modules\Projects\Http\Controllers\TaskDetailController;
 use App\Modules\Projects\Http\Controllers\TaskMoveController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,5 +46,6 @@ Route::middleware('web')->group(function () {
 
             Route::get('/{project}/tasks', [ProjectController::class, 'tasks'])->name('tasks');
             Route::post('/{project}/tasks/bulk', TaskBulkController::class)->name('tasks.bulk');
+            Route::get('/{project}/tasks/{task}/detail', TaskDetailController::class)->name('tasks.detail');
         });
 });

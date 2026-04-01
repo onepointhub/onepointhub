@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property TaskPriority $priority
  * @property ?CarbonImmutable $due_at
  * @property ?CarbonImmutable $completed_at
+ * @property CarbonImmutable $created_at
  */
 #[Fillable([
     'project_id',
@@ -114,4 +115,9 @@ class Task extends Model
     {
         return $this->belongsToMany(TaskLabel::class, 'task_label_task');
     }
+
+    //    public function comments(): HasMany
+    //    {
+    //        return $this->hasMany(TaskComment::class);
+    //    }
 }

@@ -26,6 +26,7 @@ Route::middleware('web')->group(function () {
         Route::get('search', SearchController::class)
             ->middleware('throttle:30,1')
             ->name('search');
+        Route::get('activity', [ActivityLogController::class, 'index'])->name('workspace.activity-log.index');
     });
 
     // ---------------------------------------------------------------------------
@@ -50,8 +51,6 @@ Route::middleware('web')->group(function () {
 
         Route::get('settings/notifications', [NotificationPreferenceController::class, 'edit'])->name('notifications.preferences.edit');
         Route::patch('settings/notifications/{type}', [NotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
-
-        Route::get('activity', [ActivityLogController::class, 'index'])->name('workspace.activity-log.index');
 
         Route::post('workspace/switch', WorkspaceSwitchController::class)->name('workspace.switch');
     });

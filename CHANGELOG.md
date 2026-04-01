@@ -17,6 +17,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - Projects module: task schema with sub-tasks, labels, priorities, and core CRUD endpoints (#33)
 - Projects module: milestone create/edit/delete/complete with task progress tracking and overdue badge (#39)
 - Projects module: task list with flat and milestone-grouped modes, inline status editing, and bulk actions (#35)
+- Projects module: task detail page with inline editing, sub-tasks checklist, and deferred comments/activity (#36)
 
 ---
 

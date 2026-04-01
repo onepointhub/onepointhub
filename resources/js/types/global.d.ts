@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth'
+import type { NavItem } from '@/types/navigation'
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -31,6 +32,7 @@ declare module '@inertiajs/core' {
   export interface InertiaConfig {
     sharedPageProps: {
       name: string
+      navigation: NavItem[]
       auth: Auth
       sidebarOpen: boolean
       notifications: {
