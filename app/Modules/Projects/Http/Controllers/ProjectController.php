@@ -8,6 +8,7 @@ use App\Modules\Core\Models\User;
 use App\Modules\Projects\Enums\TaskStatus;
 use App\Modules\Projects\Http\Requests\StoreProjectRequest;
 use App\Modules\Projects\Http\Requests\UpdateProjectRequest;
+use App\Modules\Projects\Models\Milestone;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\ProjectMember;
 use App\Modules\Projects\Models\Task;
@@ -267,6 +268,51 @@ class ProjectController extends Controller
             'filters' => $request->only(['status', 'priority', 'assignee_id', 'due_before']),
             'canEdit' => Gate::check('update-project'),
             'canDelete' => Gate::check('delete-task'),
+        ]);
+    }
+
+    public function gantt(Project $project): InertiaResponse
+    {
+        //        Gate::authorize('view-project');
+
+        $milestones = $project->milestones()
+            ->whereNotNull('due_at')
+            ->get()
+            ->map(fn (Milestone $milestone) => [
+                'id' => $milestone->id,
+                'name' => $milestone->name,
+                'due_at' => $milestone->due_at?->toDateString(),
+                'completed_at' => $milestone->completed_at?->toDateTimeString(),
+                'is_overdue' => $milestone->isOverdue(),
+            ]);
+
+        $tasks = $project->tasks()
+            ->whereNull('parent_id')
+            ->whereNotNull('due_at')
+            ->with('milestone:id,name')
+            ->orderBy('due_at')
+            ->get()
+            ->map(fn (Task $task) => [
+                'id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status->value,
+                'priority' => $task->priority->value,
+                'starts_at' => $task->created_at->toDateString(), // use creation date as start proxy
+                'due_at' => $task->due_at?->toDateString(),
+                'completed_at' => $task->completed_at?->toDateTimeString(),
+                'milestone_id' => $task->milestone_id,
+            ]);
+
+        return Inertia::render('Projects::Gantt', [
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+                'starts_at' => $project->starts_at?->toDateString(),
+                'ends_at' => $project->ends_at?->toDateString(),
+            ],
+            'milestones' => $milestones,
+            'tasks' => $tasks,
+            'canEdit' => Gate::check('update-project'),
         ]);
     }
 }
