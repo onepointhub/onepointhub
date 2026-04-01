@@ -44,6 +44,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: import file path is now validated to prevent directory traversal outside the `imports/` directory
 - perf: client CSV export now pre-loads all custom field values in a single query instead of one per client
 - fix: client CSV export filename now correctly includes `.csv` extension
+- fix: timer start now uses a database transaction with row locking to prevent duplicate running timers under concurrent requests
 
 ---
 
