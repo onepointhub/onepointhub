@@ -17,4 +17,11 @@ class CoreServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
     }
+
+    public function permissions(): array
+    {
+        return [
+            'view-activity-log',
+        ];
+    }
 }

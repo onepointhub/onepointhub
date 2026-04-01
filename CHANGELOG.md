@@ -34,6 +34,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - security: re-enabled project authorization — `view-project` gate now enforced on show, board, task list, gantt, and time log endpoints
 - security: added explicit `Gate::define` calls for all project and task gates
 - security: added `view-project` and `delete-task` permissions to Projects module
+- fix: admins can now access the Activity Log — `view-activity-log` gate is now defined and seeded
 
 ---
 

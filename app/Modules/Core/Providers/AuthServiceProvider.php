@@ -58,5 +58,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-project', fn (User $user) => $user->hasPermissionTo('update-project'));
         Gate::define('delete-project', fn (User $user) => $user->hasPermissionTo('delete-project'));
         Gate::define('delete-task', fn (User $user) => $user->hasPermissionTo('delete-task'));
+        Gate::define('view-activity-log', fn (User $user) => $user->hasPermissionTo('view-activity-log'));
     }
 }

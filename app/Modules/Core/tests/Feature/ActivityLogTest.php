@@ -4,11 +4,8 @@ use App\Modules\Core\Models\ActivityLog;
 use App\Modules\Core\Models\User;
 use App\Modules\Core\Models\Workspace;
 use App\Modules\Core\Models\WorkspaceInvitation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
-
-uses(RefreshDatabase::class);
 
 it('can be created and has no updated_at column', function () {
     [$user, $workspace] = workspaceWithUser('owner');
@@ -163,3 +160,16 @@ it('does not include hidden attributes in update activity log properties', funct
 
     expect($log->properties['old'])->not->toHaveKey('token');
 });
+
+it('allows admins to access the activity log', function () {
+    actingAsWorkspaceMember('admin');
+
+    $this->get(route('workspace.activity-log.index'))->assertOk();
+});
+
+it('denies members from accessing the activity log', function () {
+    [$user, $workspace] = actingAsWorkspaceMember('member');
+
+    $this->get(route('workspace.activity-log.index'))->assertForbidden();
+});
+
