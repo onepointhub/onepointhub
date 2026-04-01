@@ -73,5 +73,6 @@ Route::middleware('web')->group(function () {
             Route::post('/from-template', [ProjectTemplateController::class, 'fromTemplate'])->name('from-template');
             Route::delete('/templates/{template}', [ProjectTemplateController::class, 'destroy'])->name('templates.destroy');
             Route::post('/{project}/save-as-template', [ProjectTemplateController::class, 'store'])->name('templates.store');
+            Route::get('/{project}/gantt', [ProjectController::class, 'gantt'])->name('gantt');
         });
 });

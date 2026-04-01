@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property CarbonImmutable|null $due_at
+ * @property ?CarbonImmutable $due_at
+ * @property ?CarbonImmutable $completed_at
  */
 #[Fillable(['project_id', 'name', 'due_at', 'completed_at'])]
 #[UseFactory(MilestoneFactory::class)]
