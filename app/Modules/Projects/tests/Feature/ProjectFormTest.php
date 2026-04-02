@@ -109,3 +109,29 @@ it('returns 404 for a project in another workspace', function () {
 
     $this->get(route('projects.edit', $foreign))->assertNotFound();
 });
+
+it('preserves existing member created_at when updating the project', function () {
+    actingAsWorkspaceMember('admin');
+
+    $member = User::factory()->create();
+    $project = Project::factory()->create();
+    $project->members()->create(['user_id' => $member->id, 'role' => 'member', 'hourly_rate' => null]);
+
+    $originalCreatedAt = $project->members()->where('user_id', $member->id)->value('created_at');
+
+    // Small delay so timestamps differ if re-created
+    sleep(1);
+
+    $this->patch(route('projects.update', $project), [
+        'name' => $project->name,
+        'status' => $project->status->value,
+        'type' => $project->type->value,
+        'members' => [
+            ['user_id' => $member->id, 'role' => 'lead', 'hourly_rate' => null],
+        ],
+    ])->assertRedirect();
+
+    $afterCreatedAt = $project->members()->where('user_id', $member->id)->value('created_at');
+
+    expect($afterCreatedAt->toDateTimeString())->toBe($originalCreatedAt->toDateTimeString());
+});

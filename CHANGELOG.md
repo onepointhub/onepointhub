@@ -54,6 +54,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - perf: `EnsureInternalAccess` middleware now reads the workspace pivot role from the already-loaded workspace instead of firing a second database query
 - fix: `@mention` notifications in task comments are now scoped to workspace members only
 - perf: `syncCustomFieldValues()` now uses a single `upsert()` call instead of one query per custom field
+- fix: project member update now syncs existing members (preserving `created_at`) instead of deleting and re-creating all records
 
 ---
 

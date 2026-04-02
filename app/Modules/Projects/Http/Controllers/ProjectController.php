@@ -144,11 +144,20 @@ class ProjectController extends Controller
         DB::transaction(function () use ($project, $data, $members) {
             $project->update($data);
 
-            $project->members()->delete();
+            $submittedUserIds = collect($members)->pluck('user_id')->filter()->all();
 
-            /** @var array<string, mixed> $member */
-            foreach ($members as $member) {
-                $project->members()->create($member);
+            if (empty($submittedUserIds)) {
+                $project->members()->delete();
+            } else {
+                $project->members()->whereNotIn('user_id', $submittedUserIds)->delete();
+
+                /** @var array<string, mixed> $member */
+                foreach ($members as $member) {
+                    $project->members()->updateOrCreate(
+                        ['user_id' => $member['user_id']],
+                        collect($member)->except('user_id')->all()
+                    );
+                }
             }
         });
 
