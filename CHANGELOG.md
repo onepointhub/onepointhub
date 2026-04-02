@@ -58,6 +58,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - perf: project create/edit forms now load only workspace members instead of all users in the database
 - refactor: `LogsActivity` trait now respects a per-model `$activityLogExclude` array to suppress specific columns from activity log diffs; `WorkspaceInvitation` uses it to suppress `expires_at`
 - refactor: CSV export extracted to `ClientExportController`; portal link dispatch now uses `PortalLinkService` instead of resolving `PortalAuthController` from the container
+- refactor: `TaskController::update()` now uses `UpdateTaskRequest` with `sometimes` rules, enabling partial task updates
 
 ---
 

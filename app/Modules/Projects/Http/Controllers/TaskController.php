@@ -5,6 +5,7 @@ namespace App\Modules\Projects\Http\Controllers;
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\User;
 use App\Modules\Projects\Http\Requests\StoreTaskRequest;
+use App\Modules\Projects\Http\Requests\UpdateTaskRequest;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\Task;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,7 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function update(StoreTaskRequest $request, Project $project, Task $task): RedirectResponse
+    public function update(UpdateTaskRequest $request, Project $project, Task $task): RedirectResponse
     {
         abort_unless($task->project_id === $project->id, 404);
 
