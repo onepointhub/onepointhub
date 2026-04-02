@@ -1,9 +1,6 @@
 <?php
 
 use App\Modules\Core\Models\Workspace;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 it('switches the active workspace and redirects to dashboard', function () {
     [$user, $workspace1] = workspaceWithUser('owner');
