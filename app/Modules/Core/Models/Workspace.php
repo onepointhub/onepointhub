@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property ?WorkspaceUser $pivot
+ * @property array<string, mixed>|null $settings
  */
 #[Fillable(['name', 'slug', 'plan', 'currency', 'settings'])]
 #[UseFactory(WorkspaceFactory::class)]
