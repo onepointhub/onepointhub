@@ -14,6 +14,14 @@ breaking changes between any two versions — see upgrade notes per version.
 
 ### Added
 
+- Billing module: database schema for invoices, invoice_items, payments, and expenses with models, enums, and factories (#42)
+
+---
+
+## [0.4.0] - 2026-04-02
+
+### Added
+
 - Projects module: database schema for projects, project_members, and milestones with models, enums, and factories (#30)
 - Projects module: paginated project list with card/table toggle, status/client filters, and task progress bars (#31)
 - Projects module: create and edit project forms with client select, budget, date range, colour picker, and team member management (#32)
