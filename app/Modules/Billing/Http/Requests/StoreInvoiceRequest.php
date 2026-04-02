@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Modules\Billing\Http\Requests;
+
+use App\Modules\Core\Models\User;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreInvoiceRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        /** @var User $user */
+        $user = $this->user();
+
+        return $user->can('create-invoice');
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'client_id' => ['required', 'integer', 'exists:clients,id'],
+            'project_id' => ['nullable', 'integer', 'exists:projects,id'],
+            'issue_date' => ['required', 'date'],
+            'due_date' => ['required', 'date', 'after_or_equal:issue_date'],
+            'currency' => ['required', 'string', 'size:3'],
+            'tax_rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'discount_amount' => ['required', 'numeric', 'min:0'],
+            'notes' => ['nullable', 'string', 'max:2000'],
+            'terms' => ['nullable', 'string', 'max:2000'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.description' => ['required', 'string', 'max:500'],
+            'items.*.quantity' => ['required', 'numeric', 'min:0.01'],
+            'items.*.unit_price' => ['required', 'numeric', 'min:0'],
+            'items.*.tax_rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'items.*.time_entry_ids' => ['nullable', 'array'],
+        ];
+    }
+}
