@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
+/**
+ * @property ?WorkspaceUser $pivot
+ */
 #[Fillable(['name', 'slug', 'plan', 'currency', 'settings'])]
 #[UseFactory(WorkspaceFactory::class)]
 class Workspace extends Model

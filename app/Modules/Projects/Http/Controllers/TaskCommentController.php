@@ -4,6 +4,7 @@ namespace App\Modules\Projects\Http\Controllers;
 
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\Task;
 use App\Modules\Projects\Models\TaskComment;
@@ -33,9 +34,10 @@ class TaskCommentController extends Controller
         // Dispatch mention notification
         preg_match_all('/@(\w+)/', $validated['body'], $matches);
         if (! empty($matches[1])) {
-            User::whereIn('name', $matches[1])
-                ->where('id', '!=', $user->id)
-                ->each(fn (User $user) => $user->notify(new MentionedInCommentNotification($comment, $task)));
+            app(Workspace::class)->members()
+                ->whereIn('users.name', $matches[1])
+                ->where('users.id', '!=', $user->id)
+                ->each(fn (User $mentioned) => $mentioned->notify(new MentionedInCommentNotification($comment, $task)));
         }
 
         return redirect()->back();

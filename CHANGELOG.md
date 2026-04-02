@@ -51,6 +51,8 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: standardised `ClientsServiceProvider::moduleName()` to return `'Clients'` (title-case)
 - fix: home route now redirects to the dashboard instead of returning a plain text string
 - security: `Milestone` model now uses `BelongsToWorkspace` global scope and `LogsActivity` trait, consistent with `Task` and `Project`
+- perf: `EnsureInternalAccess` middleware now reads the workspace pivot role from the already-loaded workspace instead of firing a second database query
+- fix: `@mention` notifications in task comments are now scoped to workspace members only
 
 ---
 
