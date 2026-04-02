@@ -172,3 +172,27 @@ it('denies members from accessing the activity log', function () {
 
     $this->get(route('workspace.activity-log.index'))->assertForbidden();
 });
+
+it('excludes activityLogExclude columns from activity log properties', function () {
+    [$user, $workspace] = workspaceWithUser('owner');
+    app()->instance(Workspace::class, $workspace);
+    $this->actingAs($user);
+
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $workspace->id,
+        'email' => 'exclude@example.com',
+        'role' => 'member',
+        'token' => Str::random(64),
+        'expires_at' => now()->addHours(48),
+    ]);
+
+    $invitation->update(['expires_at' => now()->addHours(96)]);
+
+    $log = ActivityLog::where('workspace_id', $workspace->id)
+        ->where('event', 'updated')
+        ->where('subject_type', WorkspaceInvitation::class)
+        ->latest()
+        ->first();
+
+    expect($log->properties['old'])->not->toHaveKey('expires_at');
+});

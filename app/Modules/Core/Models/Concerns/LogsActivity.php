@@ -25,10 +25,17 @@ trait LogsActivity
                     'event' => $event,
                     'subject_type' => get_class($model),
                     'subject_id' => $id,
-                    'properties' => $event === 'updated' ? [
-                        'old' => collect($model->getOriginal())->except($model->getHidden())->all(),
-                        'new' => collect($model->getChanges())->except($model->getHidden())->all(),
-                    ] : null,
+                    'properties' => $event === 'updated' ? (function () use ($model): array {
+                        $excluded = array_merge(
+                            $model->getHidden(),
+                            property_exists($model, 'activityLogExclude') ? $model->activityLogExclude : [],
+                        );
+
+                        return [
+                            'old' => collect($model->getOriginal())->except($excluded)->all(),
+                            'new' => collect($model->getChanges())->except($excluded)->all(),
+                        ];
+                    })() : null,
                 ]);
             });
         }
