@@ -36,9 +36,7 @@ it('sends a portal magic link to a primary contact', function () {
 
 it('consuming a valid token establishes a portal session', function () {
     $workspace = Workspace::factory()->create();
-    $client = Client::factory()->make();
-    $client->workspace_id = $workspace->id;
-    $client->save();
+    $client = Client::factory()->create(['workspace_id' => $workspace->id]);
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
     $plain = Str::random(64);
@@ -88,9 +86,7 @@ it('rejects an expired token', function () {
 
 it('rejects an already-consumed token', function () {
     $workspace = Workspace::factory()->create();
-    $client = Client::factory()->make();
-    $client->workspace_id = $workspace->id;
-    $client->save();
+    $client = Client::factory()->create(['workspace_id' => $workspace->id]);
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
     $plain = Str::random(64);
@@ -111,9 +107,7 @@ it('rejects an already-consumed token', function () {
 
 it('renders the portal dashboard for an authenticated portal user', function () {
     $workspace = Workspace::factory()->create();
-    $client = Client::factory()->make();
-    $client->workspace_id = $workspace->id;
-    $client->save();
+    $client = Client::factory()->create(['workspace_id' => $workspace->id]);
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
 
@@ -128,9 +122,7 @@ it('renders the portal dashboard for an authenticated portal user', function () 
 
 it('redirects to portal login when no portal session exists', function () {
     $workspace = Workspace::factory()->create();
-    $client = Client::factory()->make();
-    $client->workspace_id = $workspace->id;
-    $client->save();
+    $client = Client::factory()->create(['workspace_id' => $workspace->id]);
 
     $this->get(route('portal.dashboard', [
         'workspace_slug' => $workspace->slug,
@@ -140,9 +132,7 @@ it('redirects to portal login when no portal session exists', function () {
 
 it('portal user cannot access internal dashboard', function () {
     $workspace = Workspace::factory()->create();
-    $client = Client::factory()->make();
-    $client->workspace_id = $workspace->id;
-    $client->save();
+    $client = Client::factory()->create(['workspace_id' => $workspace->id]);
 
     $contact = ClientContact::factory()->create(['client_id' => $client->id]);
     $portalUser = User::factory()->create();
