@@ -100,12 +100,15 @@ class ProjectTemplateController extends Controller
         $data = $request->validated();
         unset($data['members']);
 
-        $project = DB::transaction(function () use ($data, $template, $request) {
+        $project = DB::transaction(function () use ($data, $template, $request, $workspace) {
             $project = Project::create($data);
 
             $milestoneIds = [];
             foreach ($template->structure['milestones'] ?? [] as $i => $m) {
-                $milestone = $project->milestones()->create(['name' => $m['name']]);
+                $milestone = $project->milestones()->create([
+                    'workspace_id' => $workspace->id,
+                    'name' => $m['name'],
+                ]);
                 $milestoneIds[$i] = $milestone->id;
             }
 

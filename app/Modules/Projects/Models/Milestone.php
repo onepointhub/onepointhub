@@ -2,6 +2,8 @@
 
 namespace App\Modules\Projects\Models;
 
+use App\Modules\Core\Models\Concerns\BelongsToWorkspace;
+use App\Modules\Core\Models\Concerns\LogsActivity;
 use App\Modules\Projects\database\factories\MilestoneFactory;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -15,12 +17,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property ?CarbonImmutable $due_at
  * @property ?CarbonImmutable $completed_at
  */
-#[Fillable(['project_id', 'name', 'due_at', 'completed_at'])]
+#[Fillable(['workspace_id', 'project_id', 'name', 'due_at', 'completed_at'])]
 #[UseFactory(MilestoneFactory::class)]
 class Milestone extends Model
 {
     /** @use HasFactory<MilestoneFactory> */
-    use HasFactory;
+    use BelongsToWorkspace, HasFactory, LogsActivity;
 
     /**
      * Get the attributes that should be cast.
