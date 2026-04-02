@@ -50,6 +50,17 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: renamed `$warPrimary` variable to `$wasPrimary` in `ClientContactController`
 - fix: standardised `ClientsServiceProvider::moduleName()` to return `'Clients'` (title-case)
 - fix: home route now redirects to the dashboard instead of returning a plain text string
+- security: `Milestone` model now uses `BelongsToWorkspace` global scope and `LogsActivity` trait, consistent with `Task` and `Project`
+- perf: `EnsureInternalAccess` middleware now reads the workspace pivot role from the already-loaded workspace instead of firing a second database query
+- fix: `@mention` notifications in task comments are now scoped to workspace members only
+- perf: `syncCustomFieldValues()` now uses a single `upsert()` call instead of one query per custom field
+- fix: project member update now syncs existing members (preserving `created_at`) instead of deleting and re-creating all records
+- perf: project create/edit forms now load only workspace members instead of all users in the database
+- refactor: `LogsActivity` trait now respects a per-model `$activityLogExclude` array to suppress specific columns from activity log diffs; `WorkspaceInvitation` uses it to suppress `expires_at`
+- refactor: CSV export extracted to `ClientExportController`; portal link dispatch now uses `PortalLinkService` instead of resolving `PortalAuthController` from the container
+- refactor: `TaskController::update()` now uses `UpdateTaskRequest` with `sometimes` rules, enabling partial task updates
+- refactor: portal tests now create clients using `Client::factory()->create(['workspace_id' => ...])` instead of the fragile `make() + save()` pattern
+- refactor: `PermissionSeeder` now auto-discovers permissions and role assignments from module service providers via `ModuleRegistry`; `permissions()` on each `ModuleServiceProvider` changed to a role-keyed map
 
 ---
 

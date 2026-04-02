@@ -3,8 +3,9 @@
 namespace App\Modules\Projects\Http\Controllers;
 
 use App\Modules\Clients\Models\Client;
+use App\Modules\Core\Enums\WorkspaceRole;
 use App\Modules\Core\Http\Controllers\Controller;
-use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Enums\TaskStatus;
 use App\Modules\Projects\Http\Requests\StoreProjectRequest;
 use App\Modules\Projects\Http\Requests\UpdateProjectRequest;
@@ -70,9 +71,14 @@ class ProjectController extends Controller
     {
         Gate::authorize('create-project');
 
+        $workspace = app(Workspace::class);
+
         return Inertia::render('Projects::Create', [
             'clients' => Client::orderBy('name')->get(['id', 'name']),
-            'users' => User::orderBy('name')->get(['id', 'name', 'profile_photo_path']),
+            'users' => $workspace->members()
+                ->wherePivotIn('role', WorkspaceRole::internal())
+                ->orderBy('users.name')
+                ->get(['users.id', 'users.name', 'users.profile_photo_path']),
         ]);
     }
 
@@ -127,7 +133,10 @@ class ProjectController extends Controller
                     ]),
             ],
             'clients' => Client::orderBy('name')->get(['id', 'name']),
-            'users' => User::orderBy('name')->get(['id', 'name', 'profile_photo_path']),
+            'users' => app(Workspace::class)->members()
+                ->wherePivotIn('role', WorkspaceRole::internal())
+                ->orderBy('users.name')
+                ->get(['users.id', 'users.name', 'users.profile_photo_path']),
         ]);
     }
 
@@ -144,11 +153,20 @@ class ProjectController extends Controller
         DB::transaction(function () use ($project, $data, $members) {
             $project->update($data);
 
-            $project->members()->delete();
+            $submittedUserIds = collect($members)->pluck('user_id')->filter()->all();
 
-            /** @var array<string, mixed> $member */
-            foreach ($members as $member) {
-                $project->members()->create($member);
+            if (empty($submittedUserIds)) {
+                $project->members()->delete();
+            } else {
+                $project->members()->whereNotIn('user_id', $submittedUserIds)->delete();
+
+                /** @var array<string, mixed> $member */
+                foreach ($members as $member) {
+                    $project->members()->updateOrCreate(
+                        ['user_id' => $member['user_id']],
+                        collect($member)->except('user_id')->all()
+                    );
+                }
             }
         });
 

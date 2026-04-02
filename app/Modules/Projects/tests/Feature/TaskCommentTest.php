@@ -1,9 +1,12 @@
 <?php
 
 use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Models\Project;
 use App\Modules\Projects\Models\Task;
 use App\Modules\Projects\Models\TaskComment;
+use App\Modules\Projects\Notifications\MentionedInCommentNotification;
+use Illuminate\Support\Facades\Notification;
 
 it('stores a comment', function () {
     actingAsWorkspaceMember('member');
@@ -87,4 +90,32 @@ it('toggles a reaction on a comment', function () {
     ])->assertOk();
 
     expect($comment->reactions()->count())->toBe(0);
+});
+
+it('does not notify users outside the workspace when mentioned', function () {
+    [$author, $workspace] = actingAsWorkspaceMember('member');
+
+    $project = Project::factory()->create();
+    $task = Task::factory()->create(['project_id' => $project->id, 'parent_id' => null]);
+
+    // Create an outsider with a name that matches the @mention
+    $outsider = User::factory()->create(['name' => 'alice']);
+    $otherWorkspace = Workspace::factory()->create();
+    $outsider->workspaces()->attach($otherWorkspace->id, ['role' => 'member']);
+
+    // Restore the original author's workspace context
+    session(['active_workspace_id' => $workspace->id]);
+    app()->instance(Workspace::class, $workspace);
+    test()->actingAs($author);
+
+    Notification::fake();
+
+    $this->post(route('projects.tasks.comments.store', [$project, $task]), [
+        'body' => '@alice check this out',
+    ])->assertRedirect();
+
+    Notification::assertNotSentTo(
+        $outsider,
+        MentionedInCommentNotification::class,
+    );
 });

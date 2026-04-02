@@ -21,6 +21,13 @@ class WorkspaceInvitation extends Model
     use HasFactory, LogsActivity;
 
     /**
+     * Columns excluded from activity log diffs to reduce noise.
+     *
+     * @var string[]
+     */
+    public array $activityLogExclude = ['expires_at'];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

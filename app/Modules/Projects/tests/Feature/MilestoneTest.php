@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Enums\ProjectStatus;
 use App\Modules\Projects\Enums\ProjectType;
 use App\Modules\Projects\Models\Milestone;
@@ -77,4 +78,22 @@ it('prevents accessing milestones of another workspace project', function () {
     actingAsWorkspaceMember('admin');
 
     $this->post(route('projects.milestones.store', $foreign), ['name' => 'Hack'])->assertNotFound();
+});
+
+it('cannot update a milestone from a different workspace even if project_id matches', function () {
+    actingAsWorkspaceMember('admin');
+
+    $ownProject = Project::factory()->create();
+
+    // Build a milestone in another workspace but pointing at our project (simulates crafted attack)
+    $otherWorkspace = Workspace::factory()->create();
+    $orphan = new Milestone;
+    $orphan->workspace_id = $otherWorkspace->id;
+    $orphan->project_id = $ownProject->id;
+    $orphan->name = 'Orphan';
+    $orphan->saveQuietly();
+
+    $this->patch(route('projects.milestones.update', [$ownProject, $orphan]), [
+        'name' => 'Hacked',
+    ])->assertNotFound();
 });

@@ -13,9 +13,13 @@ abstract class ModuleServiceProvider extends ServiceProvider
     abstract public function moduleName(): string;
 
     /**
-     * Permission names this module seeds. Called by PermissionSeeder.
+     * Role - permission assignments this module contributes to the seeder.
      *
-     * @return array<string>
+     * Keys are role names ('admin', 'member', etc.).
+     * The 'owner' role receives all permissions automatically - no module needs to declare it.
+     * Use an explicit 'owner' key only for permissions that no other role should receive.
+     *
+     * @return array<string, list<string>>
      */
     public function permissions(): array
     {

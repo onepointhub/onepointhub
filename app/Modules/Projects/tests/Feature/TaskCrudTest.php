@@ -77,3 +77,21 @@ it('creates task labels with factory', function () {
 
     expect($label->name)->not()->toBeEmpty();
 });
+
+it('can update a task with only a subset of fields', function () {
+    actingAsWorkspaceMember('admin');
+
+    $project = Project::factory()->create();
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+        'parent_id' => null,
+        'title' => 'Original Title',
+        'status' => 'todo',
+    ]);
+
+    $this->patch(route('projects.tasks.update', [$project, $task]), [
+        'due_at' => now()->addWeek()->toDateString(),
+    ])->assertRedirect();
+
+    expect($task->fresh()->title)->toBe('Original Title');
+});

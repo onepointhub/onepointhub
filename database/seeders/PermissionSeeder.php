@@ -2,73 +2,46 @@
 
 namespace Database\Seeders;
 
+use App\Support\ModuleRegistry;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
 {
-    private array $permissions = [
-        'manage-members',
-        'manage-roles',
-        'manage-workspace',
-        'create-project',
-        'update-project',
-        'view-project',
-        'delete-task',
-        'delete-project',
-        'create-invoice',
-        'update-invoice',
-        'delete-invoice',
-        'send-invoice',
-        'view-client',
-        'create-client',
-        'update-client',
-        'delete-client',
-        'manage-portal',
-        'view-activity-log',
-    ];
-
     public function run(): void
     {
-        foreach ($this->permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+        $rolePermissions = [];
+
+        foreach (app(ModuleRegistry::class)->all() as $provider) {
+            foreach ($provider->permissions() as $role => $permissions) {
+                $rolePermissions[$role] = array_unique(array_merge(
+                    $rolePermissions[$role] ?? [],
+                    $permissions,
+                ));
+            }
         }
 
-        $owner = Role::firstOrCreate(['name' => 'owner']);
-        $owner->givePermissionTo(Permission::all());
+        // Create every permission that appears in any role's list
+        $allPermissions = array_unique(array_merge(...array_values($rolePermissions)));
 
-        $admin = Role::firstOrCreate(['name' => 'admin']);
-        $admin->givePermissionTo([
-            'manage-workspace',
-            'manage-members',
-            'manage-roles',
-            'create-project',
-            'update-project',
-            'view-project',
-            'delete-project',
-            'delete-task',
-            'create-invoice',
-            'update-invoice',
-            'send-invoice',
-            'view-client',
-            'create-client',
-            'update-client',
-            'delete-client',
-            'manage-portal',
-            'view-activity-log',
-        ]);
+        foreach ($allPermissions as $name) {
+            Permission::firstOrCreate(['name' => $name]);
+        }
 
-        $member = Role::firstOrCreate(['name' => 'member']);
-        $member->givePermissionTo([
-            'create-project',
-            'update-project',
-            'view-project',
-            'view-client',
-            'create-client',
-            'update-client',
-        ]);
+        // Owner always receives every permission - declared once here, not per module.
+        // The 'owner' key is skipped in the loop below, so this assignment is not overwritten.
+        Role::firstOrCreate(['name' => 'owner'])->syncPermissions(Permission::all());
 
+        // Each non-owner role receives exactly what its modules declared.
+        foreach ($rolePermissions as $roleName => $permissions) {
+            if ($roleName === 'owner') {
+                continue; // already handled above - owner gets everything
+            }
+            Role::firstOrCreate(['name' => $roleName])->syncPermissions($permissions);
+        }
+
+        // Portal-only role - exists for middleware checks, no internal permissions
         Role::firstOrCreate(['name' => 'client']);
     }
 }

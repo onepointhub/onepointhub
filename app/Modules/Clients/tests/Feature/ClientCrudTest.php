@@ -3,6 +3,8 @@
 use App\Modules\Clients\Enums\ClientStatus;
 use App\Modules\Clients\Enums\ClientType;
 use App\Modules\Clients\Models\Client;
+use App\Modules\Clients\Models\CustomFieldDefinition;
+use App\Modules\Clients\Models\CustomFieldValue;
 
 it('renders the create form', function () {
     actingAsWorkspaceMember('admin');
@@ -118,4 +120,51 @@ it('denies create to users without create-client permission', function () {
         'type' => ClientType::Company->value,
         'status' => ClientStatus::Active->value,
     ])->assertForbidden();
+});
+
+it('saves multiple custom field values on store', function () {
+    [$user, $workspace] = actingAsWorkspaceMember('admin');
+
+    $def1 = CustomFieldDefinition::factory()->create(['workspace_id' => $workspace->id]);
+    $def2 = CustomFieldDefinition::factory()->create(['workspace_id' => $workspace->id]);
+
+    $this->post(route('clients.store'), [
+        'name' => 'Acme',
+        'type' => ClientType::Company->value,
+        'status' => ClientStatus::Active->value,
+        'custom_fields' => [
+            $def1->id => 'value one',
+            $def2->id => 'value two',
+        ],
+    ])->assertRedirect();
+
+    $client = Client::where('name', 'Acme')->first();
+
+    expect(CustomFieldValue::where('model_id', $client->id)->count())->toBe(2);
+});
+
+it('updates existing custom field values on update without creating duplicates', function () {
+    [$user, $workspace] = actingAsWorkspaceMember('admin');
+
+    $client = Client::factory()->create();
+    $def = CustomFieldDefinition::factory()->create(['workspace_id' => $workspace->id]);
+
+    // Store initial value
+    $this->patch(route('clients.update', $client), [
+        'name' => $client->name,
+        'type' => $client->type->value,
+        'status' => $client->status->value,
+        'custom_fields' => [$def->id => 'initial'],
+    ])->assertRedirect();
+
+    // Update the value
+    $this->patch(route('clients.update', $client), [
+        'name' => $client->name,
+        'type' => $client->type->value,
+        'status' => $client->status->value,
+        'custom_fields' => [$def->id => 'updated'],
+    ])->assertRedirect();
+
+    expect(CustomFieldValue::where('model_id', $client->id)->count())->toBe(1)
+        ->and(CustomFieldValue::where('model_id', $client->id)->value('value'))->toBe('updated');
 });

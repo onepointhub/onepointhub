@@ -3,6 +3,7 @@
 use App\Modules\Clients\Http\Controllers\ClientBulkController;
 use App\Modules\Clients\Http\Controllers\ClientContactController;
 use App\Modules\Clients\Http\Controllers\ClientController;
+use App\Modules\Clients\Http\Controllers\ClientExportController;
 use App\Modules\Clients\Http\Controllers\ClientImportController;
 use App\Modules\Clients\Http\Controllers\Portal\PortalAuthController;
 use App\Modules\Clients\Http\Controllers\Portal\PortalDashboardController;
@@ -17,7 +18,7 @@ Route::middleware('web')->group(function () {
         ->name('clients.')
         ->group(function () {
             Route::get('/', [ClientController::class, 'index'])->name('index');
-            Route::get('export', [ClientController::class, 'export'])->name('export');
+            Route::get('export', [ClientExportController::class, 'export'])->name('export');
             Route::get('create', [ClientController::class, 'create'])->name('create');
             Route::post('/', [ClientController::class, 'store'])->name('store');
             Route::get('import', [ClientImportController::class, 'index'])->name('import');
