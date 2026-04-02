@@ -16,6 +16,7 @@ breaking changes between any two versions — see upgrade notes per version.
 
 - Billing module: database schema for invoices, invoice_items, payments, and expenses with models, enums, and factories (#42)
 - Billing module: atomic invoice number sequencing service with workspace-configurable prefix and yearly reset (#43)
+- Billing module: invoice create and edit forms with dynamic line items, time entry/expense import, and live total calculation (#44)
 
 ---
 

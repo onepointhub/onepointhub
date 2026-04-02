@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'client_id',
     'project_id',
+    'workspace_id',
     'number',
     'status',
     'issue_date',
