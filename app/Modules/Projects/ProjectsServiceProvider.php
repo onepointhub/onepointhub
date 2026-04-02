@@ -24,11 +24,18 @@ class ProjectsServiceProvider extends ModuleServiceProvider
     public function permissions(): array
     {
         return [
-            'create-project',
-            'update-project',
-            'delete-project',
-            'view-project',
-            'delete-task',
+            'admin' => [
+                'create-project',
+                'update-project',
+                'delete-project',
+                'view-project',
+                'delete-task',
+            ],
+            'member' => [
+                'create-project',
+                'update-project',
+                'view-project',
+            ],
         ];
     }
 

@@ -11,7 +11,10 @@ class CoreServiceProvider extends ModuleServiceProvider
         return 'core';
     }
 
-    public function register(): void {}
+    public function register(): void
+    {
+        //
+    }
 
     public function boot(): void
     {
@@ -21,7 +24,12 @@ class CoreServiceProvider extends ModuleServiceProvider
     public function permissions(): array
     {
         return [
-            'view-activity-log',
+            'admin' => [
+                'manage-members',
+                'manage-roles',
+                'manage-workspace',
+                'view-activity-log',
+            ],
         ];
     }
 }

@@ -60,6 +60,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - refactor: CSV export extracted to `ClientExportController`; portal link dispatch now uses `PortalLinkService` instead of resolving `PortalAuthController` from the container
 - refactor: `TaskController::update()` now uses `UpdateTaskRequest` with `sometimes` rules, enabling partial task updates
 - refactor: portal tests now create clients using `Client::factory()->create(['workspace_id' => ...])` instead of the fragile `make() + save()` pattern
+- refactor: `PermissionSeeder` now auto-discovers permissions and role assignments from module service providers via `ModuleRegistry`; `permissions()` on each `ModuleServiceProvider` changed to a role-keyed map
 
 ---
 

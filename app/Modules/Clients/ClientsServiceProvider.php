@@ -24,11 +24,18 @@ class ClientsServiceProvider extends ModuleServiceProvider
     public function permissions(): array
     {
         return [
-            'view-client',
-            'create-client',
-            'update-client',
-            'delete-client',
-            'manage-portal',
+            'admin' => [
+                'view-client',
+                'create-client',
+                'update-client',
+                'delete-client',
+                'manage-portal',
+            ],
+            'member' => [
+                'view-client',
+                'create-client',
+                'update-client',
+            ],
         ];
     }
 
