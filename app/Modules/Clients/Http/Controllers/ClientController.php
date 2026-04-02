@@ -325,15 +325,27 @@ class ClientController extends Controller
      */
     private function syncCustomFieldValues(Client $client, array $values): void
     {
-        foreach ($values as $definitionId => $value) {
-            CustomFieldValue::updateOrCreate(
-                [
-                    'custom_field_definition_id' => (int) $definitionId,
-                    'model_type' => Client::class,
-                    'model_id' => $client->id,
-                ],
-                ['value' => $value],
-            );
+        if (empty($values)) {
+            return;
         }
+
+        $rows = array_map(
+            fn ($definitionId, $value) => [
+                'custom_field_definition_id' => (int) $definitionId,
+                'model_type' => Client::class,
+                'model_id' => $client->id,
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            array_keys($values),
+            array_values($values),
+        );
+
+        CustomFieldValue::upsert(
+            $rows,
+            ['custom_field_definition_id', 'model_type', 'model_id'],
+            ['value', 'updated_at'],
+        );
     }
 }
