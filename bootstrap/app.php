@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Middleware\EnsureInternalAccess;
-use App\Http\Middleware\EnsurePortalAccess;
-use App\Http\Middleware\HandleInertiaRequests;
-use App\Http\Middleware\WorkspaceMiddleware;
+use App\Modules\Clients\Http\Middleware\EnsurePortalAccess;
+use App\Modules\Core\Http\Middleware\EnsureInternalAccess;
+use App\Modules\Core\Http\Middleware\HandleInertiaRequests;
+use App\Modules\Core\Http\Middleware\WorkspaceMiddleware;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -75,4 +75,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 app('sentry')->captureException($e);
             }
         });
-    })->create();
+    })
+    ->withCommands([
+        __DIR__.'/../app/Modules/Core/Console/Commands',
+    ])->create();

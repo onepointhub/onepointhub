@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Modules\Core\Models\User;
 
 it('returns member results matching the query', function () {
     [$owner, $workspace] = workspaceWithUser('owner');

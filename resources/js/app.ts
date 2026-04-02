@@ -8,11 +8,19 @@ const appName = import.meta.env.VITE_APP_NAME || 'OnePointHub'
 
 createInertiaApp({
   title: title => (title ? `${title} - ${appName}` : appName),
-  resolve: name =>
-    resolvePageComponent(
-      `./pages/${name}.vue`,
-      import.meta.glob<DefineComponent>('./pages/**/*.vue'),
-    ),
+  resolve: (name) => {
+    const appPages = import.meta.glob<DefineComponent>('./pages/**/*.vue')
+    const modulePages = import.meta.glob<DefineComponent>('../../app/Modules/**/resources/js/pages/**/*.vue')
+
+    const parts = name.split('::')
+    const modulePage = `../../app/Modules/${parts[0]}/resources/js/pages/${parts.slice(1).join('/')}.vue`
+
+    if (modulePages[modulePage]) {
+      return modulePages[modulePage]()
+    }
+
+    return resolvePageComponent(`./pages/${name}.vue`, appPages)
+  },
   setup({ el, App, props, plugin }) {
     createApp({ render: () => h(App, props) })
       .use(plugin)

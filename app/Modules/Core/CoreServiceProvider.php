@@ -11,7 +11,25 @@ class CoreServiceProvider extends ModuleServiceProvider
         return 'core';
     }
 
-    public function register(): void {}
+    public function register(): void
+    {
+        //
+    }
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        parent::boot();
+    }
+
+    public function permissions(): array
+    {
+        return [
+            'admin' => [
+                'manage-members',
+                'manage-roles',
+                'manage-workspace',
+                'view-activity-log',
+            ],
+        ];
+    }
 }

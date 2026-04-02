@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3'
 import { useTemplateRef } from 'vue'
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController'
+import ProfileController from '@/actions/App/Modules/Core/Http/Controllers/Settings/ProfileController'
 import Heading from '@/components/Heading.vue'
 import InputError from '@/components/InputError.vue'
 import PasswordInput from '@/components/PasswordInput.vue'

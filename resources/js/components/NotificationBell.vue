@@ -2,7 +2,7 @@
 import type { AppNotification } from '@/types/global'
 import { router, usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
-import NotificationController from '@/actions/App/Http/Controllers/NotificationController'
+import NotificationController from '@/actions/App/Modules/Core/Http/Controllers/NotificationController'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

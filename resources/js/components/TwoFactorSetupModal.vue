@@ -24,8 +24,8 @@ import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth'
 import { confirm } from '@/routes/two-factor'
 
 interface Props {
-  requiresConfirmation: boolean
-  twoFactorEnabled: boolean
+  requiresConfirmation?: boolean
+  twoFactorEnabled?: boolean
 }
 
 const props = defineProps<Props>()

@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Modules\Core\Notifications;
+
+use App\Modules\Core\Models\Workspace;
+use App\Modules\Core\Models\WorkspaceInvitation;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+
+class WorkspaceInvitationNotification extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct(
+        public readonly WorkspaceInvitation $invitation,
+        public readonly string $plain,
+    ) {}
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
+    public function via(object $notifiable): array
+    {
+        return ['mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        /** @var Workspace $workspace */
+        $workspace = $this->invitation->workspace;
+
+        $url = route('invitations.accept', ['token' => $this->plain]);
+
+        return (new MailMessage)
+            ->subject('You\'ve been invited to '.$workspace->name)
+            ->line('You\'ve been invited to join '.$workspace->name.' as a '.$this->invitation->role)
+            ->action('Accept Invitation', $url)
+            ->line('This invitation expires in 48 hours.');
+    }
+}

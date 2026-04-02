@@ -9,7 +9,7 @@ const mode = useColorMode({
 </script>
 
 <template>
-  <Button variant="outline" @click="mode = mode === 'light' ? 'dark' : 'light'">
+  <Button variant="ghost" size="icon" @click="mode = mode === 'light' ? 'dark' : 'light'">
     <SunIcon class="h-[1.2rem] w-[1.2rem] hidden dark:block" />
     <MoonIcon class="h-[1.2rem] w-[1.2rem] dark:hidden" />
     <span class="sr-only">Toggle theme</span>

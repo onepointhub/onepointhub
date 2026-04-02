@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
-use App\Models\Workspace;
+use App\Modules\Core\Models\User;
+use App\Modules\Core\Models\Workspace;
 use Database\Seeders\PermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -21,7 +21,7 @@ use Tests\TestCase;
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->beforeEach(fn () => $this->seed(PermissionSeeder::class))
-    ->in('Feature');
+    ->in('Feature', '../app/Modules/*/tests/Feature', '../app/Modules/*/tests/Unit');
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)

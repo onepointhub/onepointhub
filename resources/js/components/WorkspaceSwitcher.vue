@@ -3,7 +3,7 @@ import type { WorkspaceItem } from '@/types/global'
 import { Link, router, usePage } from '@inertiajs/vue3'
 import { ChevronsUpDown, Plus } from 'lucide-vue-next'
 import { computed } from 'vue'
-import WorkspaceSwitchController from '@/actions/App/Http/Controllers/WorkspaceSwitchController'
+import WorkspaceSwitchController from '@/actions/App/Modules/Core/Http/Controllers/WorkspaceSwitchController'
 import {
   DropdownMenu,
   DropdownMenuContent,

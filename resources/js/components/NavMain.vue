@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavItem } from '@/types'
 import { Link } from '@inertiajs/vue3'
+import * as LucideIcons from 'lucide-vue-next'
 import {
   SidebarGroup,
   SidebarMenu,
@@ -14,6 +15,16 @@ defineProps<{
 }>()
 
 const { isCurrentUrl } = useCurrentUrl()
+
+function getIcon(icon: any) {
+  if (typeof icon === 'string') {
+    // Capitalize first letter and handle lucide icon naming convention if necessary
+    // Lucide icons in the package are usually PascalCase, e.g., 'users' -> 'Users'
+    const iconName = icon.charAt(0).toUpperCase() + icon.slice(1)
+    return (LucideIcons as any)[iconName] || (LucideIcons as any)[`${iconName}Icon`] || icon
+  }
+  return icon
+}
 </script>
 
 <template>
@@ -26,7 +37,7 @@ const { isCurrentUrl } = useCurrentUrl()
           :tooltip="item.title"
         >
           <Link :href="item.href">
-            <component :is="item.icon" />
+            <component :is="getIcon(item.icon)" v-if="item.icon" />
             <span>{{ item.title }}</span>
           </Link>
         </SidebarMenuButton>

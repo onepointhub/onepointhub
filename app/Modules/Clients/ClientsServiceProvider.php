@@ -8,7 +8,7 @@ class ClientsServiceProvider extends ModuleServiceProvider
 {
     public function moduleName(): string
     {
-        return 'clients';
+        return 'Clients';
     }
 
     public function register(): void
@@ -18,17 +18,24 @@ class ClientsServiceProvider extends ModuleServiceProvider
 
     public function boot(): void
     {
-        //
+        parent::boot();
     }
 
     public function permissions(): array
     {
         return [
-            'view-client',
-            'create-client',
-            'update-client',
-            'delete-client',
-            'manage-portal',
+            'admin' => [
+                'view-client',
+                'create-client',
+                'update-client',
+                'delete-client',
+                'manage-portal',
+            ],
+            'member' => [
+                'view-client',
+                'create-client',
+                'update-client',
+            ],
         ];
     }
 
@@ -36,8 +43,8 @@ class ClientsServiceProvider extends ModuleServiceProvider
     {
         return [
             [
-                'label' => 'Clients',
-                'route' => 'clients.index',
+                'title' => 'Clients',
+                'href' => route('clients.index'),
                 'icon' => 'users',
             ],
         ];

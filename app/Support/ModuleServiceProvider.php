@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Support\ServiceProvider;
+use ReflectionClass;
 
 abstract class ModuleServiceProvider extends ServiceProvider
 {
@@ -12,9 +13,13 @@ abstract class ModuleServiceProvider extends ServiceProvider
     abstract public function moduleName(): string;
 
     /**
-     * Permission names this module seeds. Called by PermissionSeeder.
+     * Role - permission assignments this module contributes to the seeder.
      *
-     * @return array<string>
+     * Keys are role names ('admin', 'member', etc.).
+     * The 'owner' role receives all permissions automatically - no module needs to declare it.
+     * Use an explicit 'owner' key only for permissions that no other role should receive.
+     *
+     * @return array<string, list<string>>
      */
     public function permissions(): array
     {
@@ -24,10 +29,39 @@ abstract class ModuleServiceProvider extends ServiceProvider
     /**
      * Navigation items this module contributes to the sidebar.
      *
-     * @return array<array{label: string, route: string, icon?: string}>
+     * @return array<array{title: string, href: string, icon?: string}>
      */
     public function navigation(): array
     {
         return [];
+    }
+
+    /**
+     * Autoload this module's migrations and routes if the directories exist.
+     */
+    public function boot(): void
+    {
+        $migrations = $this->moduleDirectory().'/database/migrations';
+        $routes = $this->moduleDirectory().'/routes';
+
+        if (is_dir($migrations)) {
+            $this->loadMigrationsFrom($migrations);
+        }
+
+        if (is_dir($routes)) {
+            $this->loadRoutesFrom($routes.'/web.php');
+        }
+    }
+
+    /**
+     * Returns the absolute path to this module's root directory
+     * (the folder containing the ServiceProvider file).
+     */
+    protected function moduleDirectory(): string
+    {
+        /** @var string $path */
+        $path = (new ReflectionClass($this))->getFileName();
+
+        return dirname($path);
     }
 }
