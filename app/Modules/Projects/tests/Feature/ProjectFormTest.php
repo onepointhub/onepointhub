@@ -135,3 +135,19 @@ it('preserves existing member created_at when updating the project', function ()
 
     expect($afterCreatedAt->toDateTimeString())->toBe($originalCreatedAt->toDateTimeString());
 });
+
+it('does not include users from other workspaces in the create page props', function () {
+    actingAsWorkspaceMember('admin');
+
+    $outsider = User::factory()->create(['name' => 'Outsider User']);
+    // outsider is not attached to any workspace, so not a member of the current one
+
+    $this->get(route('projects.create'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where(
+                'users',
+                fn ($users) => collect($users)->where('name', 'Outsider User')->isEmpty(),
+            )
+        );
+});

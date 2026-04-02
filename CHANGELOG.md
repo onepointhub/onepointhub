@@ -55,6 +55,7 @@ breaking changes between any two versions — see upgrade notes per version.
 - fix: `@mention` notifications in task comments are now scoped to workspace members only
 - perf: `syncCustomFieldValues()` now uses a single `upsert()` call instead of one query per custom field
 - fix: project member update now syncs existing members (preserving `created_at`) instead of deleting and re-creating all records
+- perf: project create/edit forms now load only workspace members instead of all users in the database
 
 ---
 
