@@ -1,10 +1,7 @@
 <?php
 
 use App\Modules\Core\Models\Workspace;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
-
-uses(RefreshDatabase::class);
 
 it('shares the active workspace with Inertia pages', function () {
     [$user, $workspace] = workspaceWithUser('owner');
