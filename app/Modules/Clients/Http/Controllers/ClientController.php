@@ -4,22 +4,20 @@ namespace App\Modules\Clients\Http\Controllers;
 
 use App\Modules\Clients\Enums\ClientStatus;
 use App\Modules\Clients\Enums\ClientType;
-use App\Modules\Clients\Http\Controllers\Portal\PortalAuthController;
 use App\Modules\Clients\Http\Requests\StoreClientRequest;
 use App\Modules\Clients\Http\Requests\UpdateClientRequest;
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\ClientContact;
 use App\Modules\Clients\Models\CustomFieldDefinition;
 use App\Modules\Clients\Models\CustomFieldValue;
+use App\Modules\Clients\Services\PortalLinkService;
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\ActivityLog;
-use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ClientController extends Controller
 {
@@ -66,76 +64,6 @@ class ClientController extends Controller
             'canCreate' => Gate::check('create-client'),
             'canDelete' => Gate::check('delete-client'),
         ]);
-    }
-
-    public function export(Request $request): StreamedResponse
-    {
-        Gate::authorize('view-client');
-
-        $workspace = app(Workspace::class);
-
-        $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => "attachment; filename=\"clients-$workspace->slug.csv\"",
-        ];
-
-        $callback = function () use ($request) {
-            /** @var resource $handle */
-            $handle = fopen('php://output', 'w');
-
-            $definitions = CustomFieldDefinition::orderBy('sort_order')->get();
-
-            /** @var array<int|string, string|null> $headerRow */
-            $headerRow = array_merge(
-                ['ID', 'Name', 'Type', 'Status', 'Currency', 'Website', 'VAT Number', 'Notes', 'Created At'],
-                $definitions->pluck('label')->all(),
-            );
-            fputcsv($handle, $headerRow);
-
-            $query = Client::query()
-                ->when($request->input('ids'), function ($q, $ids) {
-                    /** @var string $ids */
-                    $q->whereIn('id', explode(',', $ids));
-                })
-                ->when(
-                    ! $request->input('ids') && $request->input('status'),
-                    fn ($q) => $q->where('status', $request->input('status')),
-                )
-                ->orderBy('name');
-
-            // Preload all custom field values in one query, keyed by model_id
-            $clientIds = (clone $query)->pluck('id');
-            $allValues = CustomFieldValue::where('model_type', Client::class)
-                ->whereIn('model_id', $clientIds)
-                ->get()
-                ->groupBy('model_id');
-
-            $query->each(function (Client $client) use ($handle, $definitions, $allValues) {
-                $values = ($allValues[$client->id] ?? collect())->pluck('value', 'custom_field_definition_id');
-
-                /** @var array<int|string, string|null> $data */
-                $data = array_merge(
-                    [
-                        $client->id,
-                        $client->name,
-                        $client->type->value,
-                        $client->status->value,
-                        $client->currency,
-                        $client->website,
-                        $client->vat_number,
-                        $client->notes,
-                        $client->created_at->toDateTimeString(),
-                    ],
-                    $definitions->map(fn ($d) => $values[$d->id] ?? null)->all(),
-                );
-
-                fputcsv($handle, $data);
-            });
-
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
     }
 
     public function create(): InertiaResponse
@@ -288,9 +216,13 @@ class ClientController extends Controller
         return redirect()->route('clients.index');
     }
 
-    public function sendPortalLink(Client $client): RedirectResponse
+    public function sendPortalLink(Client $client, PortalLinkService $service): RedirectResponse
     {
-        return app(PortalAuthController::class)->sendLink($client);
+        Gate::authorize('manage-portal');
+
+        $email = $service->send($client);
+
+        return back()->with('success', "Portal link sent to $email.");
     }
 
     /**

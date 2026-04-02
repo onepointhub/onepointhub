@@ -4,19 +4,21 @@ namespace App\Modules\Clients\Http\Controllers\Portal;
 
 use App\Modules\Clients\Models\Client;
 use App\Modules\Clients\Models\PortalToken;
-use App\Modules\Clients\Notifications\PortalMagicLinkNotification;
+use App\Modules\Clients\Services\PortalLinkService;
 use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\Scopes\WorkspaceScope;
 use App\Modules\Core\Models\Workspace;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class PortalAuthController extends Controller
 {
+    public function __construct(
+        private readonly PortalLinkService $portalLinkService,
+    ) {}
+
     /**
      * Generate and send a magic link to the client's primary contact.
      * Called by a workspace admin from the client detail page.
@@ -25,33 +27,9 @@ class PortalAuthController extends Controller
     {
         Gate::authorize('manage-portal');
 
-        $contact = $client->contacts()->where('is_primary', true)->first()
-            ?? $client->contacts()->first();
+        $email = $this->portalLinkService->send($client);
 
-        abort_if($contact === null || $contact->email === null, 422, 'Client has no contact with an email address.');
-
-        $workspace = app(Workspace::class);
-
-        $plain = Str::random(64);
-
-        PortalToken::create([
-            'client_id' => $client->id,
-            'contact_id' => $contact->id,
-            'token' => hash('sha256', $plain),
-            'expires_at' => now()->addHours(24),
-        ]);
-
-        $url = route('portal.auth.consume', [
-            'workspace_slug' => $workspace->slug,
-            'client_slug' => $client->slug,
-            'token' => $plain,
-        ]);
-
-        (new AnonymousNotifiable)
-            ->route('mail', $contact->email)
-            ->notify(new PortalMagicLinkNotification($url, $client->name, $workspace->name));
-
-        return back()->with('success', "Portal link sent to $contact->email.");
+        return back()->with('success', "Portal link sent to $email.");
     }
 
     /**
