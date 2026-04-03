@@ -13,6 +13,7 @@ use App\Modules\Core\Http\Controllers\Controller;
 use App\Modules\Core\Models\Workspace;
 use App\Modules\Projects\Models\Project;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -184,5 +185,42 @@ class InvoiceController extends Controller
                 'sort_order' => $index,
             ]);
         }
+    }
+
+    public function index(Request $request): Response
+    {
+        $workspace = app(Workspace::class);
+
+        /** @var ?string $dateFrom */
+        $dateFrom = $request->date_from;
+        /** @var ?string $dateTo */
+        $dateTo = $request->date_to;
+
+        $baseQuery = Invoice::with('client')
+            ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
+            ->when($request->filled('client_id'), fn ($q) => $q->where('client_id', $request->client_id))
+            ->when($request->filled('date_from'), fn ($q) => $q->whereDate('issue_date', '>=', $dateFrom))
+            ->when($request->filled('date_to'), fn ($q) => $q->whereDate('issue_date', '<=', $dateTo));
+
+        $summary = [
+            'outstanding' => (clone $baseQuery)
+                ->whereIn('status', ['sent', 'viewed', 'partial', 'overdue'])
+                ->sum('total'),
+            'overdue' => (clone $baseQuery)
+                ->where('status', InvoiceStatus::Overdue)
+                ->sum('total'),
+            'paid' => (clone $baseQuery)
+                ->where('status', InvoiceStatus::Paid)
+                ->sum('total'),
+        ];
+
+        $invoices = $baseQuery->orderByDesc('issue_date')->paginate(25)->withQueryString();
+
+        return Inertia::render('Billing::invoices/Index', [
+            'invoices' => $invoices,
+            'summary' => $summary,
+            'clients' => Client::orderBy('name')->get(['id', 'name']),
+            'filters' => $request->only(['status', 'client_id', 'date_from', 'date_to']),
+        ]);
     }
 }
